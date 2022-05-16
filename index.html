@@ -1,13 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" href="/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Vite App</title>
+	</head>
+	<body>
+		<div id="app"></div>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
+	<style>
+		/* TODO:修改为采用其他方式修改vant样式 */
+		.van-grid-item__content {
+			padding: 0;
+		}
+		.slide-right-enter-active,
+		.slide-right-leave-active,
+		.slide-left-enter-active,
+		.slide-left-leave-active {
+			will-change: transform;
+			transition: all 500ms;
+			position: absolute;
+		}
+
+		.slide-right-enter {
+			opacity: 0;
+			transform: translate(-100%);
+		}
+
+		.slide-right-leave-active {
+			opacity: 0;
+			transform: translateX(100%);
+		}
+
+		.slide-left-enter {
+			opacity: 0;
+			transform: translateX(100%);
+		}
+
+		.slide-left-leave-active {
+			opacity: 0;
+			transform: translateX(-100%);
+		}
+		.van-sidebar {
+			width: 90px;
+		}
+	</style>
 </html>
