@@ -28,6 +28,7 @@ import Title from './components/title.vue'
 import Price from './components/price.vue'
 import Tab from './components/tabgood.vue'
 import ActionBar from './components/actionbar.vue'
+import { productInfo } from '@src/api/product'
 export default defineComponent({
 	name: 'Demo',
 	components: {
