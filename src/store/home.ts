@@ -7,6 +7,7 @@ export interface HomeState extends State {
 	cateGoryList: Array<NameWithIcon>
 	brandList: Array<NameWithIcon>
 	hotList: Array<HotItem>
+	userInfo: User
 	getHomeData: () => Promise<void>
 	toggleLoading: () => void
 }
@@ -23,12 +24,27 @@ export interface HotItem {
 	goodsPicUrl: string
 }
 
-const useStore = create<HomeState>((set, get) => ({
+export interface User {
+	userId: Number
+	userName: string
+	nickName: string
+	phoneNumber: string
+	avatar: string
+}
+
+const useStore = create<HomeState>((set) => ({
 	isFetching: false,
 	banerList: [],
 	cateGoryList: [],
 	brandList: [],
 	hotList: [],
+	userInfo: {
+		userId: 0,
+		userName: '',
+		nickName: '',
+		phoneNumber: '',
+		avatar: ''
+	},
 	toggleLoading: () => set((state) => ({ isFetching: !state.isFetching })),
 	getHomeData: async () => {
 		set({ isFetching: true })
@@ -227,12 +243,19 @@ const useStore = create<HomeState>((set, get) => ({
 				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
 			}
 		]
+		const userInfo = {
+			userId: 0,
+			userName: 'qq',
+			nickName: 'qq',
+			phoneNumber: '12345678901',
+			avatar: 'http://124.221.239.207:9000/qqcloud/2022-05-17/wyz.jfif'
+		}
 		set({ banerList })
 		set({ cateGoryList })
 		set({ brandList })
 		set({ hotList })
 		set({ isFetching: false })
-
+		set({ userInfo })
 	}
 }))
 

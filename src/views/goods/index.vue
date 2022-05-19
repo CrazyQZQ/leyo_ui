@@ -1,42 +1,104 @@
 <template>
-  <div>
-    <van-nav-bar title="商品详情" left-arrow @click-left="onClickLeft" @click-right="share">
-      <template #right>
-        <svg t="1625494686843" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1183" width="20" height="20">
-          <path d="M752 128a144 144 0 1 1-101.728 245.92l-213.312 124.608c7.136 19.136 11.04 39.84 11.04 61.472 0 20.128-3.392 39.456-9.6 57.472l222.528 91.744a144 144 0 1 1-20.256 60.864l-234.176-96.544a176 176 0 1 1-2.464-229.92l212.064-123.872A144 144 0 0 1 752 128z m32 576a80 80 0 1 0 0 160 80 80 0 0 0 0-160z m-512-256a112 112 0 1 0 0 224 112 112 0 0 0 0-224z m480-256a80 80 0 1 0 0 160 80 80 0 0 0 0-160z" fill="#000000" p-id="1184">
-          </path>
-        </svg>
-      </template>
-    </van-nav-bar>
-    <Swipe></Swipe>
-    <div class="bg-gray-50 overflow-scroll">
-      <Title></Title>
-      <Price></Price>
-      <Tab></Tab>
-      <ActionBar></ActionBar>
-    </div>
-    <van-share-sheet v-model:show="showShare" title="立即分享给好友" :options="options" @select="onSelect" />
-  </div>
+	<div>
+		<van-nav-bar title="商品详情" left-arrow @click-left="onClickLeft" @click-right="share">
+			<template #right>
+				<svg t="1625494686843" class="icon" viewBox="0 0 1024 1024" version="1.1"
+					xmlns="http://www.w3.org/2000/svg" p-id="1183" width="20" height="20">
+					<path
+						d="M752 128a144 144 0 1 1-101.728 245.92l-213.312 124.608c7.136 19.136 11.04 39.84 11.04 61.472 0 20.128-3.392 39.456-9.6 57.472l222.528 91.744a144 144 0 1 1-20.256 60.864l-234.176-96.544a176 176 0 1 1-2.464-229.92l212.064-123.872A144 144 0 0 1 752 128z m32 576a80 80 0 1 0 0 160 80 80 0 0 0 0-160z m-512-256a112 112 0 1 0 0 224 112 112 0 0 0 0-224z m480-256a80 80 0 1 0 0 160 80 80 0 0 0 0-160z"
+						fill="#000000" p-id="1184">
+					</path>
+				</svg>
+			</template>
+		</van-nav-bar>
+		<!-- swipe -->
+		<van-swipe class="w-full rounded-md shadow-sm" :autoplay="3000" indicator-color="#fff">
+			<van-swipe-item v-for="(item, index) in swipeList" :key="index">
+				<img :src="item.imgUrl" alt="" @click="goToUrL(item.url)" />
+			</van-swipe-item>
+			<template #indicator="{ active }">
+				<div class="custom-indicator">{{ active + 1 }}/{{ swipeList.length }}</div>
+			</template>
+		</van-swipe>
+		<div class="bg-gray-50 overflow-scroll">
+			<!-- title -->
+			<section class="flex justify-between items-center bg-white divide-x divide-gray-200">
+				<div class="p-3">
+					<span class="font-semibold text-base leading-3">名创优品（MINISO）黑色可口可乐杯子850ml 吸管杯保冷杯保温杯不锈钢水杯</span>
+					<p class="text-gray-500 text-sm">品牌：nike</p>
+					<p class="text-gray-500 text-sm">系列：秋季上新</p>
+				</div>
+				<div class="min-w-1/4 ">
+					<p class="text-center">
+						<van-tag round color="#7869DE" size="large">优惠价</van-tag>
+					</p>
+					<p class="text-yellow-500 font-bold text-lg text-center">￥5000.0</p>
+				</div>
+			</section>
+			<!-- Price -->
+			<section class="mt-2 bg-white divide-y divide-gray-50">
+				<p class="flex justify-between p-3 text-gray-500 text-xs">
+					<span>指导零售价</span>
+					<span>￥6899.0</span>
+				</p>
+				<p class="flex justify-between p-3 text-gray-500 text-xs">
+					<span>最低购买数量</span>
+					<span>999件</span>
+				</p>
+				<p class="flex justify-between p-3 text-gray-500 text-xs" @click="selectSku">
+					<span>已选</span>
+					<span class="text-black">
+						请选择规格 数量
+						<van-icon name="arrow" />
+					</span>
+				</p>
+				<van-popup v-model:show="show" round position="bottom" :style="{ padding: '15px' }">
+					<sku></sku>
+				</van-popup>
+			</section>
+			<!-- Tab -->
+			<section class="mt-2 bg-white">
+				<van-tabs v-model:active="activeName">
+					<van-tab title="商品介绍" name="a">
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+						<p>商品介绍</p>
+					</van-tab>
+					<van-tab title="商品配置" name="b">商品配置</van-tab>
+				</van-tabs>
+			</section>
+			<section class="h-14">
+				<van-action-bar :safe-area-inset-bottom="false">
+					<van-action-bar-icon icon="chat-o" text="客服" color="#7869DE" />
+					<van-action-bar-icon icon="cart-o" text="购物车" color="#7869DE" />
+					<van-action-bar-icon icon="shop-o" text="店铺" color="#7869DE" />
+					<van-action-bar-button type="warning" text="加入购物车" />
+					<van-action-bar-button type="danger" text="立即购买" />
+				</van-action-bar>
+			</section>
+		</div>
+		<van-share-sheet v-model:show="showShare" title="立即分享给好友" :options="options" @select="onSelect" />
+	</div>
 </template>
 
 <script lang='ts'>
 import { defineComponent, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import {Toast} from 'vant';
-import Swipe from './components/swipe.vue'
-import Title from './components/title.vue'
-import Price from './components/price.vue'
-import Tab from './components/tabgood.vue'
-import ActionBar from './components/actionbar.vue'
-import { productInfo } from '@src/api/product'
+import { Toast } from 'vant';
+import { useToggle } from '@vant/use'
+import sku from '@components/sku.vue';
 export default defineComponent({
 	name: 'Demo',
 	components: {
-		Swipe,
-		Title,
-		Price,
-		Tab,
-		ActionBar
+		sku
 	},
 	setup() {
 		const showShare = ref(false)
@@ -48,22 +110,48 @@ export default defineComponent({
 			{ name: '分享海报', icon: 'poster' },
 			{ name: '二维码', icon: 'qrcode' }
 		]
+		let swipeList = [
+			{
+				imgUrl:
+					'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/171006/32/1590/56923/5ff7d25cE9271e4f5/c70e1a1bc1f86324.jpg!q70.dpg.webp',
+				url: 'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/171006/32/1590/56923/5ff7d25cE9271e4f5/c70e1a1bc1f86324.jpg!q70.dpg.webp'
+			},
+			{
+				imgUrl:
+					'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/161721/6/1620/65326/5ff7d25cEaea0abf4/b762cc62c1423801.jpg!q70.dpg.webp',
+				url: 'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/161721/6/1620/65326/5ff7d25cEaea0abf4/b762cc62c1423801.jpg!q70.dpg.webp'
+			}
+		]
+		const goToUrL = (url: string) => {
+			if (url != '') window.open(url)
+		}
 		const onClickLeft = () => {
 			router.go(-1)
 		}
 		const share = () => {
-			showShare.value=true
+			showShare.value = true
 		}
-		const onSelect = (option:any) => {
+		const onSelect = (option: any) => {
 			Toast(option.name)
 			showShare.value = false
 		}
+		const [show, toggle] = useToggle()
+		toggle(false)
+		const selectSku = () => {
+			toggle(true)
+		}
+		const activeName = ref('a')
 		return {
 			onClickLeft,
 			share,
 			showShare,
 			options,
-			onSelect
+			onSelect,
+			swipeList,
+			goToUrL,
+			show,
+			selectSku,
+			activeName
 		}
 	}
 })

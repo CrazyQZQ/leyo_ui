@@ -23,7 +23,13 @@ import {
 	Stepper,
 	Search,
 	Sidebar,
-	SidebarItem 
+	SidebarItem,
+	Card,
+	SubmitBar,
+	PullRefresh,
+	Checkbox, 
+	CheckboxGroup,
+	SwipeCell
 	// Toast
 } from 'vant'
 
@@ -52,6 +58,11 @@ export function useVant(app: App<Element>) {
 	app.use(Search)
 	app.use(Sidebar)
 	app.use(SidebarItem)
-	// app.use(Toast)
+	app.use(Card)
+	app.use(SubmitBar)
+	app.use(PullRefresh)
+	app.use(Checkbox)
+	app.use(CheckboxGroup)
+	app.use(SwipeCell)
 	return app
 }

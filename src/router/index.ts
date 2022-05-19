@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
 			Tabbar: () => import('../components/Tabbar.vue')
 		}
 	},
-		{
+	{
 		path: '/search',
 		name: 'search',
 		components: {
@@ -41,12 +41,26 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/order',
 		name: 'order',
-		component: () => import('../views/order/index.vue')
+		components: {
+			default: () => import('../views/order/index.vue'),
+			Tabbar: () => import('../components/Tabbar.vue')
+		}
 	},
-		{
+	{
+		path: '/shoppingCart',
+		name: 'ShoppingCart',
+		components: {
+			default: () => import('../views/shoppingCart/index.vue'),
+			Tabbar: () => import('../components/Tabbar.vue')
+		}
+	},
+	{
 		path: '/me',
 		name: 'me',
-		component: () => import('../views/me/index.vue')
+		components: {
+			default: () => import('../views/me/index.vue'),
+			Tabbar: () => import('../components/Tabbar.vue')
+		}
 	}
 ]
 
