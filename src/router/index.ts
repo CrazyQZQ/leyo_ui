@@ -61,6 +61,21 @@ const routes: Array<RouteRecordRaw> = [
 			default: () => import('../views/me/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
 		}
+	},
+	{
+		path: '/address',
+		name: 'Address',
+		component: () => import('../views/address/index.vue')
+	},
+	{
+		path: '/orderDetail',
+		name: 'OrderDetail',
+		component: () => import('../views/order/orderDetail.vue')
+	},
+	{
+		path: '/submitOrder',
+		name: 'SubmitOrder',
+		component: () => import('../views/order/submitOrder.vue')
 	}
 ]
 

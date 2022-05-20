@@ -1,0 +1,75 @@
+<template>
+  <div class="address-box">
+    <van-nav-bar title="购物车" left-arrow @click-left="goBack"></van-nav-bar>
+    <div class="address-body">
+      <van-address-list
+          v-model="chosenAddressId"
+          :list="list"
+          :disabled-list="disabledList"
+          disabled-text="以下地址超出配送范围"
+          default-tag-text="默认"
+          @add="onAdd"
+          @edit="onEdit"
+      />
+    </div>
+  </div>
+</template>
+
+<script>
+import { reactive, toRefs } from 'vue';
+import { useRouter } from 'vue-router';
+
+export default {
+  name: 'ShoppingCart',
+  components: {
+  },
+  setup() {
+    const router = useRouter()
+    const goBack = () => {
+      router.go(-1)
+    }
+    const chosenAddressId = ref('1');
+    const list = [
+      {
+        id: '1',
+        name: '张三',
+        tel: '13000000000',
+        address: '浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室',
+        isDefault: true,
+      },
+      {
+        id: '2',
+        name: '李四',
+        tel: '1310000000',
+        address: '浙江省杭州市拱墅区莫干山路 50 号',
+      },
+    ];
+    const disabledList = [
+      {
+        id: '3',
+        name: '王五',
+        tel: '1320000000',
+        address: '浙江省杭州市滨江区江南大道 15 号',
+      },
+    ];
+
+    const onAdd = () => Toast('新增地址');
+    const onEdit = (item, index) => Toast('编辑地址:' + index);
+
+    return {
+      goBack,
+      list,
+      onAdd,
+      onEdit,
+      disabledList,
+      chosenAddressId,
+    };
+  }
+}
+</script>
+<style lang="less" scoped>
+.cart-box {
+  padding: 0.5rem;
+  background-color: #fff;
+}
+</style>

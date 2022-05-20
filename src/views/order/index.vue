@@ -74,7 +74,7 @@ export default {
     }
 
     const goTo = (id) => {
-      router.push({ path: '/order-detail', query: { id } })
+      router.push({ path: '/orderDetail', query: { id } })
     }
 
     const goBack = () => {

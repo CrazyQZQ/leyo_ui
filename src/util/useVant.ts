@@ -29,7 +29,8 @@ import {
 	PullRefresh,
 	Checkbox, 
 	CheckboxGroup,
-	SwipeCell
+	SwipeCell,
+	AddressList
 	// Toast
 } from 'vant'
 
@@ -64,5 +65,6 @@ export function useVant(app: App<Element>) {
 	app.use(Checkbox)
 	app.use(CheckboxGroup)
 	app.use(SwipeCell)
+	app.use(AddressList)
 	return app
 }
