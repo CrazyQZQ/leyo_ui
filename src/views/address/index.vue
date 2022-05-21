@@ -1,60 +1,64 @@
 <template>
   <div class="address-box">
-    <van-nav-bar title="购物车" left-arrow @click-left="goBack"></van-nav-bar>
+    <van-nav-bar title="收货地址" left-arrow @click-left="goBack"></van-nav-bar>
     <div class="address-body">
-      <van-address-list
-          v-model="chosenAddressId"
-          :list="list"
-          :disabled-list="disabledList"
-          disabled-text="以下地址超出配送范围"
-          default-tag-text="默认"
-          @add="onAdd"
-          @edit="onEdit"
-      />
+      <van-address-list v-model="chosenAddressId" :list="list" :disabled-list="disabledList" disabled-text="以下地址超出配送范围"
+        default-tag-text="默认" @add="onAdd" @edit="onEdit" />
     </div>
   </div>
 </template>
 
-<script>
-import { reactive, toRefs } from 'vue';
+<script lang="ts">
+import { defineComponent, onMounted, computed } from 'vue'
+import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { Toast } from 'vant';
+import { UserAddress, BaseResponseType } from "@src/models";
+import { queryUserAddress } from '@src/api/user'
+import { useStore } from 'vuex'
+import { IGlobalState } from '@src/store'
 
 export default {
-  name: 'ShoppingCart',
+  name: 'Address',
   components: {
   },
   setup() {
+    const store = useStore<IGlobalState>()
     const router = useRouter()
     const goBack = () => {
       router.go(-1)
     }
     const chosenAddressId = ref('1');
-    const list = [
-      {
-        id: '1',
-        name: '张三',
-        tel: '13000000000',
-        address: '浙江省杭州市西湖区文三路 138 号东方通信大厦 7 楼 501 室',
-        isDefault: true,
-      },
-      {
-        id: '2',
-        name: '李四',
-        tel: '1310000000',
-        address: '浙江省杭州市拱墅区莫干山路 50 号',
-      },
-    ];
-    const disabledList = [
-      {
-        id: '3',
-        name: '王五',
-        tel: '1320000000',
-        address: '浙江省杭州市滨江区江南大道 15 号',
-      },
-    ];
+    let list = ref([]);
+    onMounted(async () => {
+      let userId = store.state.auth.userInfo.userId
+      if (userId) {
+        let res: any = await queryUserAddress({ userId: userId })
+        list.value = res.data.map((e: { id: any; receiverName: any; receiverTel: any; fullAddress: any; defaultStatus: number; }) => {
+          return {
+            id: e.id,
+            name: e.receiverName,
+            tel: e.receiverTel,
+            address: e.fullAddress,
+            isDefault: e.defaultStatus === 1,
+          }
+        })
+      }
+    })
+    const disabledList = ref([])
 
-    const onAdd = () => Toast('新增地址');
-    const onEdit = (item, index) => Toast('编辑地址:' + index);
+    const onAdd = () => {
+      router.push('/addressEdit')
+    };
+    const onEdit = (item: UserAddress, index: number) => {
+      const addressId = item.id + ''
+      router.push({
+        name: 'AddressEdit',
+        params: {
+          addressId
+        }
+      })
+    };
 
     return {
       goBack,
@@ -68,7 +72,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.cart-box {
+.address-box {
   padding: 0.5rem;
   background-color: #fff;
 }

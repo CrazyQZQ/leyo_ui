@@ -38,27 +38,30 @@
 <script lang='ts'>
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import Swiper from '@src/components/Swiper.vue'
-import useStore from '@src/store/home'
 export default defineComponent({
-	name: 'Demo',
+	name: 'Home',
 	components: {
 		Swiper
 	},
 	setup() {
-		const [banerList, getHomeData] = useStore((state) => [state.banerList, state.getHomeData])
+		const banerList = [
+			'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
+			'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
+			'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg',
+			'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
+			'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
+			'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg'
+		]
 		const value = ref('')
 		const active = ref(1)
 		const banners = computed(() =>
-			banerList.value.map((e: string) => {
+			banerList.map((e: string) => {
 				return {
 					imgUrl: e,
 					url: ''
 				}
 			})
 		)
-		onMounted(() => {
-			getHomeData()
-		})
 		const onClickLeft = () => {
 			console.log('1')
 		}

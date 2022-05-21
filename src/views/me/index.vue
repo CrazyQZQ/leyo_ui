@@ -27,7 +27,7 @@
             <span>账号管理</span>
             <van-icon name="arrow" />
           </li>
-          <li class="van-hairline--bottom" @click="goTo('/address', { from: 'mine' })">
+          <li class="van-hairline--bottom" @click="goTo('/address', {})">
             <span>地址管理</span>
             <van-icon name="arrow" />
           </li>
@@ -36,27 +36,24 @@
             <van-icon name="arrow" />
           </li>
         </ul>
-        <nav-bar></nav-bar>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue'
-import useStore from '@src/store/home'
+import { defineComponent, onMounted, computed } from 'vue'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
+import { IGlobalState } from '@src/store'
 export default defineComponent({
   name: 'me',
 
   setup() {
     const loading = false
     const router = useRouter()
-    const [userInfo, getHomeData] = useStore((state) => [
-      state.userInfo,
-      state.getHomeData
-    ])
-    onMounted(() => {
-      getHomeData()
+    const store = useStore<IGlobalState>()
+    const userInfo = computed(() => {
+      return store.state.auth.userInfo
     })
     const goBack = () => {
       router.go(-1)

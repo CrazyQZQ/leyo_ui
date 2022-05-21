@@ -1,5 +1,13 @@
+export interface BaseResponseType {
+    code: number;
+    msg: string;
+    data?: any;
+    total?: number;
+    rows?: Array<any>;
+}
+
 // 账户
-interface Account {
+export interface Account {
     accountId: number;
     accountCode: number;
     accountName: string;
@@ -11,7 +19,7 @@ interface Account {
 }
 
 // 地区
-interface AreaInfo {
+export interface AreaInfo {
     id: number;
     parentId: number;
     code: string;
@@ -20,7 +28,7 @@ interface AreaInfo {
 }
 
 // 品牌
-interface Brand {
+export interface Brand {
     id: number;
     parentId: number;
     name: string;
@@ -34,7 +42,7 @@ interface Brand {
 }
 
 // 部门
-interface Dept {
+export interface Dept {
     deptId: number;
     parentId: number;
     ancestors: string;
@@ -52,7 +60,7 @@ interface Dept {
 }
 
 // 菜单
-interface Menu {
+export interface Menu {
     menuId: number;
     menuName: string;
     parentId: number;
@@ -75,7 +83,7 @@ interface Menu {
 }
 
 // 订单
-interface Order {
+export interface Order {
     id: number;
     number: string;
     userId: number;
@@ -90,7 +98,7 @@ interface Order {
 }
 
 // 订单详情
-interface OrderDetail {
+export interface OrderDetail {
     id: number;
     masterId: number;
     productId: number;
@@ -105,7 +113,7 @@ interface OrderDetail {
 }
 
 // 商品
-interface Product {
+export interface Product {
     id: number;
     code: string;
     name: string;
@@ -122,7 +130,7 @@ interface Product {
 }
 
 // 商品品类
-interface ProductType {
+export interface ProductType {
     id: number;
     parentId: number;
     name: string;
@@ -135,7 +143,7 @@ interface ProductType {
 }
 
 // 角色
-interface Role {
+export interface Role {
     roleId: number;
     roleName: string;
     roleKey: string;
@@ -152,34 +160,26 @@ interface Role {
 }
 
 // 用户
-interface User {
+export interface User {
     userId: number;
-    deptId: number;
     userName: string;
     nickName: string;
-    userType: string;
     email: string;
     phoneNumber: string;
     sex: string;
     avatar: string;
-    password: string;
-    status: string;
-    delFlag: string;
-    loginIp: string;
-    loginDate: string;
-    createBy: string;
-    createTime: string;
-    updateBy: string;
-    updateTime: string;
-    remark: string;
-    authorities: string[];
-    jti: string;
-    expireIn: number;
+}
+
+// 用户
+export interface Token {
+    access_token?: string;
+    expires_in?: number;
+    refresh_token?: string;
 }
 
 // 用户地址
-interface UserAddress {
-    id: number;
+export interface UserAddress {
+    id?: number;
     userId: number;
     receiverName: string;
     receiverTel: string;
@@ -188,12 +188,13 @@ interface UserAddress {
     province: string;
     city: string;
     region: string;
+    areaCode: string;
     detailAddress: string;
     fullAddress: string;
-    updateBy: string;
-    updateTime: string;
-    createBy: string;
-    createTime: string;
+    updateBy?: string;
+    updateTime?: string;
+    createBy?: string;
+    createTime?: string;
 }
 
 

@@ -53,10 +53,14 @@ import { useLocalStorage, useSessionStorage } from '@vueuse/core'
 import { Notify } from 'vant'
 import { useRouter } from 'vue-router'
 import { login } from '@src/api/user'
+import { useStore } from 'vuex'
+import * as Types from '@src/store/modules/login/types'
+import { IGlobalState } from '@src/store'
 
 export default defineComponent({
 	name: 'Login',
 	setup() {
+		const store = useStore<IGlobalState>()
 		const userName = ref('')
 		const passWord = ref('')
 		const route = useRouter()
@@ -80,17 +84,23 @@ export default defineComponent({
 				})
 				return
 			}
-			const res = await login({
+			const res: any = await login({
 				username: userName.value,
 				password: passWord.value
 			})
-			console.log(res)
+			if(res && res.code === 200){
+				store.dispatch(`auth/${Types.SAVE_USER_INFO}`, res.data.user)
+				store.dispatch(`auth/${Types.SAVE_TOKEN}`, res.data.token)
+				route.replace({
+					name: 'Home'
+				})
+			}
 			// isLogin.value = false
 			// if (isLogin) {
 			// 	useLocalStorage(' ', true)
-			// 	route.replace({
-			// 		name: 'Home'
-			// 	})
+				// route.replace({
+				// 	name: 'Home'
+				// })
 			// }
 		}
 

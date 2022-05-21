@@ -68,6 +68,11 @@ const routes: Array<RouteRecordRaw> = [
 		component: () => import('../views/address/index.vue')
 	},
 	{
+		path: '/addressEdit',
+		name: 'AddressEdit',
+		component: () => import('../views/address/addressEdit.vue')
+	},
+	{
 		path: '/orderDetail',
 		name: 'OrderDetail',
 		component: () => import('../views/order/orderDetail.vue')
@@ -87,16 +92,17 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	// 1. 每个条件执行后都要跟上 next() 或 使用路由跳转 api 否则页面就会停留一动不动
 	// 2. 要合理的搭配条件语句，避免出现路由死循环。
-	const token = localStorage.get('token')
-	if (to.meta.auth) {
-		if (!token) {
-			return router.replace({
-				name: 'login'
-			})
-		}
-		next()
-	} else {
-		next()
-	}
+	// const token = localStorage.get('token')
+	// if (to.meta.auth) {
+	// 	if (!token) {
+	// 		return router.replace({
+	// 			name: 'login'
+	// 		})
+	// 	}
+	// 	next()
+	// } else {
+	// 	next()
+	// }
+	next()
 })
 export default router

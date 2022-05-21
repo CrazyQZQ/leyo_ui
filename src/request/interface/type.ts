@@ -10,11 +10,3 @@ export interface RequestInterceptors<T = AxiosResponse> {
 export interface RequestConfig<T = AxiosResponse> extends AxiosRequestConfig {
   interceptors?: RequestInterceptors<T>
 }
-
-export interface BaseResponseType {
-  code: number;
-  msg: string;
-  data: any;
-  total: number;
-  rows: Array<any>;
-}

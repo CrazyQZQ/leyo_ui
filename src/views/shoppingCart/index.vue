@@ -1,18 +1,18 @@
 <template>
     <div class="cart-box">
-        <van-nav-bar title="购物车" left-arrow @click-left="goBack"></van-nav-bar>
+        <van-nav-bar title="购物车"></van-nav-bar>
         <div class="cart-body">
             <van-swipe-cell stop-propagation v-for="(item, index) in cartItems" :key="index">
                 <van-checkbox v-model="item.checked" checked-color="#b4282d"></van-checkbox>
-                <van-card :tag="item.tag" :price="item.price" :desc="item.desc" :title="item.title"
-                    :thumb="item.thumb" :origin-price="100" class="goods-card">
+                <van-card :tag="item.tag" :price="item.price" :desc="item.desc" :title="item.title" :thumb="item.thumb"
+                    :origin-price="100" class="goods-card">
                     <template #footer>
                         <van-stepper v-model="item.num" @change="numChange(item.num)" />
                     </template>
                 </van-card>
             </van-swipe-cell>
         </div>
-        <van-submit-bar :price="3050" button-text="提交订单" @submit="onSubmit">
+        <van-submit-bar class="submit-bar" :price="3050" button-text="提交订单" @submit="onSubmit">
             <van-checkbox v-model="selectAll">全选</van-checkbox>
             <template #tip>
                 你的收货地址不支持配送, <span @click="onClickLink">修改地址</span>
@@ -125,6 +125,10 @@ export default {
                 margin-left: 8px;
             }
         }
+    }
+
+    .submit-bar {
+        bottom: 54px;
     }
 }
 </style>

@@ -30,7 +30,10 @@ import {
 	Checkbox, 
 	CheckboxGroup,
 	SwipeCell,
-	AddressList
+	AddressList,
+	Skeleton,
+	AddressEdit,
+	Area
 	// Toast
 } from 'vant'
 
@@ -66,5 +69,8 @@ export function useVant(app: App<Element>) {
 	app.use(CheckboxGroup)
 	app.use(SwipeCell)
 	app.use(AddressList)
+	app.use(Skeleton)
+	app.use(AddressEdit)
+	app.use(Area)
 	return app
 }
