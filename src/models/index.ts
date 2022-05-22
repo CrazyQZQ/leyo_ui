@@ -131,15 +131,15 @@ export interface Product {
 
 // 商品品类
 export interface ProductType {
-    id: number;
-    parentId: number;
+    id?: number;
+    parentId?: number;
     name: string;
-    orderNum: number;
-    createBy: string;
-    createTime: string;
-    updateBy: string;
-    updateTime: string;
-    imageUrls: string[];
+    orderNum?: number;
+    createBy?: string;
+    createTime?: string;
+    updateBy?: string;
+    updateTime?: string;
+    imageUrls?: string[];
 }
 
 // 角色
