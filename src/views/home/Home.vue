@@ -61,7 +61,7 @@ export default defineComponent({
       let res: any = await getBanners()
       banners.value = res.data.map((e) => {
         return {
-          imgUrl: e,
+          imgUrl: e.imageUrl,
           url: ''
         }
       })
