@@ -1,3 +1,4 @@
+<script src="../../api/product.ts"></script>
 <template>
 <div>
   <div v-if="isFetching">loading...</div>
@@ -26,6 +27,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue'
+import { reactive, toRefs, ref } from 'vue';
 import { useDark } from '@vueuse/core'
 import Head from '@components/Head.vue'
 import Search from '@components/Search.vue'
@@ -33,6 +35,8 @@ import Swiper from '@src/components/Swiper.vue'
 import Category from './components/Category.vue'
 import Brand from './components/Brand.vue'
 import HotSale from './components/HotSale.vue'
+import { getBanners,getAnnouncement } from '@src/api/home'
+import { typeList,brandList } from '@src/api/product'
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -49,60 +53,29 @@ export default defineComponent({
 
 		const isFetching = false
 
-		const banerList = [
-			'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
-			'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
-			'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg',
-			'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
-			'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
-			'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg'
-		]
-		const cateGoryList = [
-			{ name: '锅具', icon: 'https://yanxuan.nosdn.127.net/10a143a382aaf8b8de1f533a1d3b6760.png' },
-			{ name: '清洁保鲜', icon: 'https://yanxuan.nosdn.127.net/fdec112d77ab0c5083e6b2c53531df7d.png' },
-			{ name: '厨房配件', icon: 'https://yanxuan.nosdn.127.net/a2e37687f68cf5cf9b5f5a54803e6171.png' },
-			{ name: '刀剪砧板', icon: 'https://yanxuan.nosdn.127.net/2783b73b3631d9c71a3c602000e393c8.png' },
-			{ name: '餐具', icon: 'https://yanxuan.nosdn.127.net/9fec1d39f6753fbc727b1ff76d9c810c.png' },
-			{ name: '水具杯壶', icon: 'https://yanxuan.nosdn.127.net/95237ea2c4867a7b6d21e69245316af1.png' },
-			{ name: '咖啡具酒具', icon: 'https://yanxuan.nosdn.127.net/318f9ae4afc1aff32515de0f73e66f80.png' },
-			{ name: '咖啡具酒具', icon: 'https://yanxuan.nosdn.127.net/318f9ae4afc1aff32515de0f73e66f80.png' }
-		]
-		const brandList = [
-			{ name: '冲调饮品', icon: 'https://yanxuan.nosdn.127.net/3d70af62c5461e795644b12721508372.png' },
-			{ name: '茶包花茶', icon: 'https://yanxuan.nosdn.127.net/fb30ea6fc9e87d768200c70511a14b08.png' },
-			{ name: '传统茗茶', icon: 'https://yanxuan.nosdn.127.net/34dc2c9d61f0df6d472820ac28940ce3.png' },
-			{ name: '方便食品', icon: 'https://yanxuan.nosdn.127.net/559b5d22eb9d4164d7b613f6a8d22836.png' },
-			{ name: '饼干糕点', icon: 'https://yanxuan.nosdn.127.net/f8d152f1f6f4b0072dcbf10dc2983fe6.png' },
-			{ name: '小食糖巧', icon: 'https://yanxuan.nosdn.127.net/63e96c2a27d6a4d67e8feeaaa5ba9c7e.png' },
-			{ name: '坚果炒货', icon: 'https://yanxuan.nosdn.127.net/1d0d218887aa43ea3d74a4dcb8965d2d.png' },
-			{ name: '肉类零食', icon: 'https://yanxuan.nosdn.127.net/b7f1f3360d22c5a0c9feed8cbe17885c.png' },
-			{ name: '蜜饯果干', icon: 'https://yanxuan.nosdn.127.net/2be45b99b4409c4149412a74f2eaf387.png' },
-			{ name: '米面粮油', icon: 'https://yanxuan.nosdn.127.net/51b86357c5e34b77e3bb866b1cff15dc.png' },
-			{ name: '南北干货', icon: 'https://yanxuan.nosdn.127.net/bbb7bf16b78265062dad3be66724f779.png' },
-			{ name: '调味酱菜', icon: 'https://yanxuan.nosdn.127.net/84ca992ed0f3b733b1d71499a14532bb.png' },
-			{ name: '酒类', icon: 'https://yanxuan.nosdn.127.net/3698a22b151359f4c1c55f565909fef8.png' },
-			{ name: '乳品饮料', icon: 'https://yanxuan.nosdn.127.net/9b04ab23f967ef43d08bef7220452ff4.png' },
-			{ name: '果鲜肉蛋', icon: 'https://yanxuan.nosdn.127.net/bbb5ae00927c496676dc1747989b91b7.png' },
-			{ name: '网易黑猪', icon: 'https://yanxuan.nosdn.127.net/fc7770efb186d8b440e6f8b07dc0446b.png' },
-			{ name: '海外美食', icon: 'https://yanxuan.nosdn.127.net/fe74ff4076d40d2c068d18feb6831a38.png' },
-			{ name: '饼干糕点', icon: 'https://yanxuan.nosdn.127.net/f8d152f1f6f4b0072dcbf10dc2983fe6.png' },
-			{ name: '小食糖巧', icon: 'https://yanxuan.nosdn.127.net/63e96c2a27d6a4d67e8feeaaa5ba9c7e.png' },
-			{ name: '坚果炒货', icon: 'https://yanxuan.nosdn.127.net/1d0d218887aa43ea3d74a4dcb8965d2d.png' },
-			{ name: '肉类零食', icon: 'https://yanxuan.nosdn.127.net/b7f1f3360d22c5a0c9feed8cbe17885c.png' },
-			{ name: '蜜饯果干', icon: 'https://yanxuan.nosdn.127.net/2be45b99b4409c4149412a74f2eaf387.png' },
-			{ name: '冲调饮品', icon: 'https://yanxuan.nosdn.127.net/3d70af62c5461e795644b12721508372.png' },
-			{ name: '茶包花茶', icon: 'https://yanxuan.nosdn.127.net/fb30ea6fc9e87d768200c70511a14b08.png' },
-			{ name: '传统茗茶', icon: 'https://yanxuan.nosdn.127.net/34dc2c9d61f0df6d472820ac28940ce3.png' },
-			{ name: '方便食品', icon: 'https://yanxuan.nosdn.127.net/559b5d22eb9d4164d7b613f6a8d22836.png' },
-			{ name: '米面粮油', icon: 'https://yanxuan.nosdn.127.net/51b86357c5e34b77e3bb866b1cff15dc.png' },
-			{ name: '南北干货', icon: 'https://yanxuan.nosdn.127.net/bbb7bf16b78265062dad3be66724f779.png' },
-			{ name: '调味酱菜', icon: 'https://yanxuan.nosdn.127.net/84ca992ed0f3b733b1d71499a14532bb.png' },
-			{ name: '酒类', icon: 'https://yanxuan.nosdn.127.net/3698a22b151359f4c1c55f565909fef8.png' },
-			{ name: '乳品饮料', icon: 'https://yanxuan.nosdn.127.net/9b04ab23f967ef43d08bef7220452ff4.png' },
-			{ name: '果鲜肉蛋', icon: 'https://yanxuan.nosdn.127.net/bbb5ae00927c496676dc1747989b91b7.png' },
-			{ name: '网易黑猪', icon: 'https://yanxuan.nosdn.127.net/fc7770efb186d8b440e6f8b07dc0446b.png' },
-			{ name: '海外美食', icon: 'https://yanxuan.nosdn.127.net/fe74ff4076d40d2c068d18feb6831a38.png' }
-		]
+		let banners = ref([])
+		let cateGoryList = ref([])
+		let brandList = ref([])
+    let announcement = ref('暂无公告')
+    onMounted(async () => {
+      let res: any = await getBanners()
+      banners.value = res.data.map((e) => {
+        return {
+          imgUrl: e,
+          url: ''
+        }
+      })
+
+      let res2: any = await getAnnouncement()
+      announcement.value = res2.data
+
+      let res3: any = await typeList()
+      cateGoryList.value = res3.rows
+
+      let res4: any = await brandList()
+      brandList.value = res4.rows
+    })
+
 		const hotList = [
 			{
 				goodsId: '3469',
@@ -237,14 +210,6 @@ export default defineComponent({
 				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
 			}
 		]
-		const banners = computed(() =>
-			banerList.map((e: string) => {
-				return {
-					imgUrl: e,
-					url: ''
-				}
-			})
-		)
 
 		const keyWordChange = (e: string) => {
 			console.log('keyword:', e)
@@ -261,6 +226,7 @@ export default defineComponent({
 			brandList,
 			banners,
 			hotList,
+      announcement,
 			keyWordChange,
 			toSearch
 		}

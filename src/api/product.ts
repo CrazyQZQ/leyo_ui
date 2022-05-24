@@ -1,17 +1,44 @@
 import request from "@src/request";
 
-
-export function typeTree() {
+/**
+ * 查询品类列表
+ * @returns
+ */
+export function typeList() {
     request.post({
         url: '/product/type/list',
-        headers: {'Content-Type': 'application/from-data'}
+        params: {parentId: 0}
     })
 }
 
-export function brandTree() {
+/**
+ * 查询品类数
+ * @returns
+ */
+export function typeTree() {
+    request.get({
+        url: '/product/type/tree'
+    })
+}
+
+/**
+ * 查询品牌列表
+ * @returns
+ */
+export function brandList() {
     request.post({
         url: '/product/brand/list',
-        headers: {'Content-Type': 'application/from-data'}
+        params: {parentId: 0}
+    })
+}
+
+/**
+ * 查询品牌数
+ * @returns
+ */
+export function brandTree() {
+    request.post({
+        url: '/product/brand/tree',
     })
 }
 
