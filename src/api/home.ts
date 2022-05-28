@@ -1,3 +1,6 @@
+
+import request from "@src/request";
+
 /**
  * 查询banners
  * @returns

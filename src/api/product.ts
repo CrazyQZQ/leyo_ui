@@ -4,10 +4,10 @@ import request from "@src/request";
  * 查询品类列表
  * @returns
  */
-export function typeList() {
-    request.post({
+export const typeList = (params: object) => {
+    return request.get({
         url: '/product/type/list',
-        params: {parentId: 0}
+        params: params
     })
 }
 
@@ -15,8 +15,8 @@ export function typeList() {
  * 查询品类数
  * @returns
  */
-export function typeTree() {
-    request.get({
+export const typeTree = () => {
+    return request.get({
         url: '/product/type/tree'
     })
 }
@@ -25,10 +25,10 @@ export function typeTree() {
  * 查询品牌列表
  * @returns
  */
-export function brandList() {
-    request.post({
+export const brandList = (params: object) => {
+    return request.get({
         url: '/product/brand/list',
-        params: {parentId: 0}
+        params: params
     })
 }
 
@@ -36,29 +36,30 @@ export function brandList() {
  * 查询品牌数
  * @returns
  */
-export function brandTree() {
-    request.post({
+export const brandTree = () => {
+    return request.get({
         url: '/product/brand/tree',
     })
 }
 
-export function productList(params: any) {
-    request.post({
+/**
+ * 查询商品列表
+ * @param params 
+ */
+export const productList = (params: any) => {
+    return request.get({
         url: '/product/list',
-        params: params,
-        headers: {'Content-Type': 'application/from-data'}
-    })
-}
-
-export function productInfo(params: any) {
-    request.get({
-        url: '/product/info',
         params: params
     })
 }
 
-
-
-
-
-
+/**
+ * 查询商品详情
+ * @param params 
+ */
+export const productInfo = (params: any) => {
+    return request.get({
+        url: '/product/info',
+        params: params
+    })
+}

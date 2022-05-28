@@ -114,19 +114,19 @@ export interface OrderDetail {
 
 // 商品
 export interface Product {
-    id: number;
-    code: string;
-    name: string;
-    unit: string;
-    price: number;
-    stock: number;
-    createBy: string;
-    createTime: string;
-    updateBy: string;
-    updateTime: string;
-    imageUrls: string[];
-    brandId: number;
-    brandName: string;
+    id?: number;
+    code?: string;
+    name?: string;
+    unit?: string;
+    price?: number;
+    stock?: number;
+    createBy?: string;
+    createTime?: string;
+    updateBy?: string;
+    updateTime?: string;
+    imageUrls?: string[];
+    brandId?: number;
+    brandName?: string;
 }
 
 // 商品品类

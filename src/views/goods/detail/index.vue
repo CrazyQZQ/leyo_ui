@@ -12,27 +12,27 @@
 			</template>
 		</van-nav-bar>
 		<!-- swipe -->
-		<van-swipe class="w-full rounded-md shadow-sm" :autoplay="3000" indicator-color="#fff">
-			<van-swipe-item v-for="(item, index) in swipeList" :key="index">
-				<img :src="item.imgUrl" alt="" @click="goToUrL(item.url)" />
+		<van-swipe class="w-full h-90 rounded-md shadow-sm" :autoplay="3000" indicator-color="#fff">
+			<van-swipe-item v-for="(item, index) in product.imageUrls" :key="index">
+				<img :src="item" :alt="product.name"/>
 			</van-swipe-item>
-			<template #indicator="{ active }">
+			<!-- <template #indicator="{ active }">
 				<div class="custom-indicator">{{ active + 1 }}/{{ swipeList.length }}</div>
-			</template>
+			</template> -->
 		</van-swipe>
 		<div class="bg-gray-50 overflow-scroll">
 			<!-- title -->
 			<section class="flex justify-between items-center bg-white divide-x divide-gray-200">
 				<div class="p-3">
-					<span class="font-semibold text-base leading-3">名创优品（MINISO）黑色可口可乐杯子850ml 吸管杯保冷杯保温杯不锈钢水杯</span>
-					<p class="text-gray-500 text-sm">品牌：nike</p>
+					<span class="font-semibold text-base leading-3">{{product.name}}</span>
+					<p class="text-gray-500 text-sm">品牌：{{product.brandName}}</p>
 					<p class="text-gray-500 text-sm">系列：秋季上新</p>
 				</div>
 				<div class="min-w-1/4 ">
 					<p class="text-center">
 						<van-tag round color="#7869DE" size="large">优惠价</van-tag>
 					</p>
-					<p class="text-yellow-500 font-bold text-lg text-center">￥5000.0</p>
+					<p class="text-yellow-500 font-bold text-lg text-center">￥{{product.price}}</p>
 				</div>
 			</section>
 			<!-- Price -->
@@ -90,17 +90,26 @@
 </template>
 
 <script lang='ts'>
-import { defineComponent, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { defineComponent, ref, onMounted, Ref } from 'vue'
+import { useRouter,useRoute } from 'vue-router'
 import { Toast } from 'vant';
 import { useToggle } from '@vant/use'
+import { productInfo } from "@src/api/product";
+import { Product } from "@src/models";
 import sku from '@components/sku.vue';
 export default defineComponent({
-	name: 'Demo',
+	name: 'ProductDetail',
 	components: {
 		sku
 	},
 	setup() {
+		const route = useRoute()
+		let product: Ref<Product> = ref({});
+		onMounted(async () => {
+			let res: any = await productInfo({ id: route.query.id })
+			product.value = res.data as Product
+			product.value.imageUrls = product.value.imageUrls?product.value.imageUrls:[]
+		})
 		const showShare = ref(false)
 		const router = useRouter()
 		const options = [
@@ -151,7 +160,8 @@ export default defineComponent({
 			goToUrL,
 			show,
 			selectSku,
-			activeName
+			activeName,
+			product
 		}
 	}
 })

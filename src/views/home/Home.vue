@@ -1,28 +1,28 @@
-<script src="../../api/product.ts"></script>
 <template>
-<div>
-  <div v-if="isFetching">loading...</div>
-  <div v-else class="bg-gray-100 dark:bg-gray-800 flex flex-col items-center">
-    <!-- header -->
-    <Head title="首页" :back="false">
-      <template v-slot:header-action>
-        <van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
-      </template>
-    </Head>
-    <!-- search-input -->
-    <Search @keywordChange="keyWordChange" :onClick="toSearch"></Search>
-    <!-- content -->
-    <div class="w-11/12 mt-2">
-      <Swiper :list="banners"></Swiper>
-      <Category :list="cateGoryList"></Category>
-      <Brand :list="brandList"></Brand>
-      <HotSale></HotSale>
-    </div>
-		
-    <!-- footer-table -->
-  </div>
-  <!-- <van-number-keyboard safe-area-inset-bottom /> -->
-</div>
+	<div>
+		<div v-if="isFetching">loading...</div>
+		<div v-else class="bg-gray-100 dark:bg-gray-800 flex flex-col items-center">
+			<!-- header -->
+
+			<Head title="首页" :back="false">
+				<template v-slot:header-action>
+					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
+				</template>
+			</Head>
+			<!-- search-input -->
+			<Search @keywordChange="keyWordChange" :onClick="toSearch"></Search>
+			<!-- content -->
+			<div class="w-11/12 mt-2">
+				<Swiper :list="banners"></Swiper>
+				<Category :list="cateGoryList"></Category>
+				<Brand :list="brands"></Brand>
+				<HotSale></HotSale>
+			</div>
+
+			<!-- footer-table -->
+		</div>
+		<!-- <van-number-keyboard safe-area-inset-bottom /> -->
+	</div>
 </template>
 
 <script lang="ts">
@@ -35,8 +35,8 @@ import Swiper from '@src/components/Swiper.vue'
 import Category from './components/Category.vue'
 import Brand from './components/Brand.vue'
 import HotSale from './components/HotSale.vue'
-import { getBanners,getAnnouncement } from '@src/api/home'
-import { typeList,brandList } from '@src/api/product'
+import { getBanners, getAnnouncement } from '@src/api/home'
+import { typeList, brandList } from '@src/api/product'
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -55,26 +55,26 @@ export default defineComponent({
 
 		let banners = ref([])
 		let cateGoryList = ref([])
-		let brandList = ref([])
-    let announcement = ref('暂无公告')
-    onMounted(async () => {
-      let res: any = await getBanners()
-      banners.value = res.data.map((e) => {
-        return {
-          imgUrl: e.imageUrl,
-          url: ''
-        }
-      })
+		let brands = ref([])
+		let announcement = ref('暂无公告')
+		onMounted(async () => {
+			let res: any = await getBanners()
+			banners.value = res.data.map((e: { imageUrl: any; }) => {
+				return {
+					imgUrl: e.imageUrl,
+					url: ''
+				}
+			})
 
-      let res2: any = await getAnnouncement()
-      announcement.value = res2.data
+			let res2: any = await getAnnouncement()
+			announcement.value = res2.data
 
-      let res3: any = await typeList()
-      cateGoryList.value = res3.rows
+			let res3: any = await typeList({parentId: 0})
+			cateGoryList.value = res3.rows
 
-      let res4: any = await brandList()
-      brandList.value = res4.rows
-    })
+			let res4: any = await brandList({parentId: 0})
+			brands.value = res4.rows
+		})
 
 		const hotList = [
 			{
@@ -223,10 +223,10 @@ export default defineComponent({
 			isFetching,
 			isDark,
 			cateGoryList,
-			brandList,
+			brands,
 			banners,
 			hotList,
-      announcement,
+			announcement,
 			keyWordChange,
 			toSearch
 		}

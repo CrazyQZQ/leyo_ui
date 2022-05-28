@@ -1,49 +1,58 @@
 <template>
 
-  <div style="height:80%;width:80px;backgroud-color:red"></div>
-  <van-nav-bar title="商品分类" @click-left="onClickLeft" @click-right="onClickRight">
-    <template #right>
-      <van-icon name="cart-o" size="18" />
-    </template>
-  </van-nav-bar>
-  <van-search v-model="value" placeholder="请输入搜索关键词" />
-  <div class="flex">
-    <van-sidebar v-model="active" class="h-148">
-      <van-sidebar-item title="推荐专区" />
-      <van-sidebar-item title="冬季专区" />
-      <van-sidebar-item title="爆品专区" />
-      <van-sidebar-item title="居家好物" />
-      <van-sidebar-item title="鞋包配饰" />
-      <van-sidebar-item title="服装配饰" />
-      <van-sidebar-item title="家用电器" />
-      <van-sidebar-item title="洗护美妆" />
-      <van-sidebar-item title="饮食酒水" />
-      <van-sidebar-item title="餐具厨房" />
-      <van-sidebar-item title="母婴亲子" />
-    </van-sidebar>
-    <div class="w-4/5 h-148 overflow-y-auto">
-      <div class="px-3">
-        <Swiper :list="banners"></Swiper>
-      </div>
-      <van-grid :column-num="3" gutter="30" :border="false" class="mt-4">
-        <van-grid-item v-for="value in 9" :key="value">
-          <van-image round width="3rem" height="3rem" src="https://img.yzcdn.cn/vant/cat.jpeg" />
-          <span class="text-gray-500 text-sm py-3">全球购</span>
-        </van-grid-item>
-      </van-grid>
-    </div>
-  </div>
+	<div style="height:80%;width:80px;backgroud-color:red"></div>
+	<van-nav-bar title="商品分类" @click-left="onClickLeft" @click-right="onClickRight">
+		<template #right>
+			<van-icon name="cart-o" size="18" />
+		</template>
+	</van-nav-bar>
+	<van-search v-model="value" placeholder="请输入搜索关键词" />
+	<div class="flex">
+		<van-sidebar v-model="active" class="h-148" @change="onChangeCategory">
+			<template v-for="(item, index) in categories" :key="index">
+				<van-sidebar-item :title="item['name']" />
+			</template>
+		</van-sidebar>
+		<div class="w-4/5 h-148 overflow-y-auto">
+			<div class="px-3">
+				<Swiper :list="banners"></Swiper>
+			</div>
+			<van-grid :column-num="3" gutter="30" :border="false" class="mt-4">
+				<van-grid-item v-for="(item,index) in subCategories" :key="index">
+					<van-image radius="5" width="3rem" height="3rem" src="http://124.221.239.207:9000/qqcloud/2022-05-10/qps1.jpg" />
+					<span class="text-gray-500 text-sm py-3">{{item['name']}}</span>
+				</van-grid-item>
+			</van-grid>
+		</div>
+	</div>
 </template>
 
 <script lang='ts'>
 import { computed, defineComponent, onMounted, ref } from 'vue'
 import Swiper from '@src/components/Swiper.vue'
+import { typeList, brandList } from "@src/api/product";
 export default defineComponent({
 	name: 'Home',
 	components: {
 		Swiper
 	},
 	setup() {
+		let categories = ref([])
+		let subCategories = ref([])
+		onMounted(async () => {
+			let res: any = await typeList({parentId: 0})
+			
+			if(res.code === 200){
+				categories.value = res.data
+				if(categories.value.length > 0){
+					let res1: any = await typeList({parentId: res.data[0].id})
+					subCategories.value = res1.data
+				}
+			}
+			let res2: any = await brandList({parentId: 0})
+		})
+
+
 		const banerList = [
 			'http://img.alicdn.com/imgextra/i3/115/O1CN01PsvX9s1Cii2Pvi3WM_!!115-0-luban.jpg',
 			'https://gw.alicdn.com/imgextra/i3/43/O1CN01ZPUEId1CBjWPLKzea_!!43-0-lubanu.jpg',
@@ -53,7 +62,7 @@ export default defineComponent({
 			'https://gw.alicdn.com/imgextra/i2/41/O1CN01yCNeuw1CAojHBeUyC_!!41-0-lubanu.jpg'
 		]
 		const value = ref('')
-		const active = ref(1)
+		const active = ref(0)
 		const banners = computed(() =>
 			banerList.map((e: string) => {
 				return {
@@ -68,12 +77,21 @@ export default defineComponent({
 		const onClickRight = () => {
 			console.log('2')
 		}
+		const onChangeCategory = async (index: number) => {
+			let res: any = await typeList({parentId: categories.value[index]['id']})
+			subCategories.value = res.data
+			console.log(subCategories.value);
+			
+		}
 		return {
+			categories,
+			subCategories,
 			value,
 			active,
 			banners,
 			onClickLeft,
-			onClickRight
+			onClickRight,
+			onChangeCategory
 		}
 	}
 })

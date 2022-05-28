@@ -13,7 +13,7 @@
             </van-swipe-cell>
         </div>
         <van-submit-bar class="submit-bar" :price="3050" button-text="提交订单" @submit="onSubmit">
-            <van-checkbox v-model="selectAll">全选</van-checkbox>
+            <van-checkbox v-model="selectAll" @click="click" checked-color="#b4282d">全选</van-checkbox>
             <template #tip>
                 你的收货地址不支持配送, <span @click="onClickLink">修改地址</span>
             </template>
@@ -21,8 +21,8 @@
     </div>
 </template>
 
-<script>
-import { reactive, toRefs } from 'vue';
+<script lang="ts">
+import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
@@ -41,11 +41,13 @@ export default {
             totalPage: 0
         })
 
+        let selectAll = ref(false)
+
         const goBack = () => {
             router.go(-1)
         }
 
-        let cartItems = [
+        let cartItems = ref([
             {
                 num: 2,
                 tag: '标签',
@@ -76,26 +78,31 @@ export default {
                 thumb: 'http://124.221.239.207:9000/qqcloud/2022-05-09/cola.png',
                 originPrice: '10.00'
             }
-        ]
+        ])
 
 
 
         const onSubmit = () => {
-            router.push('/order')
+            router.push('/submitOrder')
+        }
+        const click = (event: MouseEvent) => {
+            cartItems.value.forEach(item => {
+                item.checked = selectAll.value
+            })
         }
 
-        const numChange = (num) => {
+        const numChange = (num: number) => {
             console.log('numChange', num)
         }
 
-        const selectAll = false
         return {
             ...toRefs(state),
             goBack,
             cartItems,
             onSubmit,
             selectAll,
-            numChange
+            numChange,
+            click
         }
     }
 }
