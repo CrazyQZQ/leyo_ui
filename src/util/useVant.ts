@@ -33,7 +33,8 @@ import {
 	AddressList,
 	Skeleton,
 	AddressEdit,
-	Area
+	Area,
+	NoticeBar
 	// Toast
 } from 'vant'
 
@@ -72,5 +73,6 @@ export function useVant(app: App<Element>) {
 	app.use(Skeleton)
 	app.use(AddressEdit)
 	app.use(Area)
+	app.use(NoticeBar)
 	return app
 }

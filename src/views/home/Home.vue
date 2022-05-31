@@ -14,6 +14,7 @@
 			<!-- content -->
 			<div class="w-11/12 mt-2">
 				<Swiper :list="banners"></Swiper>
+        <van-notice-bar left-icon="volume-o" :text="announcement" />
 				<Category :list="cateGoryList"></Category>
 				<Brand :list="brands"></Brand>
 				<HotSale></HotSale>
