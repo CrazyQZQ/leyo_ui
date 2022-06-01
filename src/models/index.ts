@@ -197,6 +197,21 @@ export interface UserAddress {
     createTime?: string;
 }
 
+interface Sku {
+    id: number;
+    productId: number;
+    spec: string;
+    price: number;
+    stock: number;
+    sales: number;
+    imageUrl: string;
+    skuAttributes: ISkuAttributesItem[];
+}
+interface SkuAttributes {
+    name: string;
+    value: string;
+}
+
 
 
 

@@ -6,7 +6,8 @@
 
 			<Head title="首页" :back="false">
 				<template v-slot:header-action>
-					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
+<!--					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />-->
+          <van-icon name="chat-o" dot size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
 				</template>
 			</Head>
 			<!-- search-input -->

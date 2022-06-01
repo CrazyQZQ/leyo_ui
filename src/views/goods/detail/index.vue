@@ -16,9 +16,6 @@
 			<van-swipe-item v-for="(item, index) in product.imageUrls" :key="index">
 				<img :src="item" :alt="product.name"/>
 			</van-swipe-item>
-			<!-- <template #indicator="{ active }">
-				<div class="custom-indicator">{{ active + 1 }}/{{ swipeList.length }}</div>
-			</template> -->
 		</van-swipe>
 		<div class="bg-gray-50 overflow-scroll">
 			<!-- title -->
@@ -26,7 +23,7 @@
 				<div class="p-3">
 					<span class="font-semibold text-base leading-3">{{product.name}}</span>
 					<p class="text-gray-500 text-sm">品牌：{{product.brandName}}</p>
-					<p class="text-gray-500 text-sm">系列：秋季上新</p>
+<!--					<p class="text-gray-500 text-sm">系列：秋季上新</p>-->
 				</div>
 				<div class="min-w-1/4 ">
 					<p class="text-center">
@@ -39,37 +36,24 @@
 			<section class="mt-2 bg-white divide-y divide-gray-50">
 				<p class="flex justify-between p-3 text-gray-500 text-xs">
 					<span>指导零售价</span>
-					<span>￥6899.0</span>
+					<span>￥{{product.price}}</span>
 				</p>
 				<p class="flex justify-between p-3 text-gray-500 text-xs">
 					<span>最低购买数量</span>
 					<span>999件</span>
 				</p>
-				<p class="flex justify-between p-3 text-gray-500 text-xs" @click="selectSku">
-					<span>已选</span>
-					<span class="text-black">
-						请选择规格 数量
-						<van-icon name="arrow" />
-					</span>
-				</p>
-				<van-popup v-model:show="show" round position="bottom" :style="{ padding: '15px' }">
-					<sku></sku>
-				</van-popup>
+<!--				<p class="flex justify-between p-3 text-gray-500 text-xs" @click="selectSku">-->
+<!--					<span>已选</span>-->
+<!--					<span class="text-black">-->
+<!--						请选择规格 数量-->
+<!--						<van-icon name="arrow" />-->
+<!--					</span>-->
+<!--				</p>-->
 			</section>
 			<!-- Tab -->
 			<section class="mt-2 bg-white">
 				<van-tabs v-model:active="activeName">
 					<van-tab title="商品介绍" name="a">
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
-						<p>商品介绍</p>
 						<p>商品介绍</p>
 					</van-tab>
 					<van-tab title="商品配置" name="b">商品配置</van-tab>
@@ -80,9 +64,12 @@
 					<van-action-bar-icon icon="chat-o" text="客服" color="#7869DE" />
 					<van-action-bar-icon icon="cart-o" text="购物车" color="#7869DE" />
 					<van-action-bar-icon icon="shop-o" text="店铺" color="#7869DE" />
-					<van-action-bar-button type="warning" text="加入购物车" />
-					<van-action-bar-button type="danger" text="立即购买" />
+					<van-action-bar-button type="warning" text="加入购物车" @click="selectSku(1)"/>
+					<van-action-bar-button type="danger" text="立即购买" @click="selectSku(2)"/>
 				</van-action-bar>
+        <van-popup v-model:show="show" round position="bottom" :style="{ padding: '15px' }">
+          <sku :product="product" :submitType="submitType"></sku>
+        </van-popup>
 			</section>
 		</div>
 		<van-share-sheet v-model:show="showShare" title="立即分享给好友" :options="options" @select="onSelect" />
@@ -112,24 +99,13 @@ export default defineComponent({
 		})
 		const showShare = ref(false)
 		const router = useRouter()
+    let submitType: Ref<number> = ref(1)
 		const options = [
 			{ name: '微信', icon: 'wechat' },
 			{ name: '微博', icon: 'weibo' },
 			{ name: '复制链接', icon: 'link' },
 			{ name: '分享海报', icon: 'poster' },
 			{ name: '二维码', icon: 'qrcode' }
-		]
-		let swipeList = [
-			{
-				imgUrl:
-					'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/171006/32/1590/56923/5ff7d25cE9271e4f5/c70e1a1bc1f86324.jpg!q70.dpg.webp',
-				url: 'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/171006/32/1590/56923/5ff7d25cE9271e4f5/c70e1a1bc1f86324.jpg!q70.dpg.webp'
-			},
-			{
-				imgUrl:
-					'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/161721/6/1620/65326/5ff7d25cEaea0abf4/b762cc62c1423801.jpg!q70.dpg.webp',
-				url: 'https://m.360buyimg.com/mobilecms/s720x720_jfs/t1/161721/6/1620/65326/5ff7d25cEaea0abf4/b762cc62c1423801.jpg!q70.dpg.webp'
-			}
 		]
 		const goToUrL = (url: string) => {
 			if (url != '') window.open(url)
@@ -146,8 +122,9 @@ export default defineComponent({
 		}
 		const [show, toggle] = useToggle()
 		toggle(false)
-		const selectSku = () => {
+		const selectSku = (type: number) => {
 			toggle(true)
+      submitType.value = type
 		}
 		const activeName = ref('a')
 		return {
@@ -156,12 +133,12 @@ export default defineComponent({
 			showShare,
 			options,
 			onSelect,
-			swipeList,
 			goToUrL,
 			show,
 			selectSku,
 			activeName,
-			product
+			product,
+      submitType
 		}
 	}
 })

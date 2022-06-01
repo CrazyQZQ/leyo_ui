@@ -81,6 +81,11 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/submitOrder',
 		name: 'SubmitOrder',
 		component: () => import('../views/order/submitOrder.vue')
+	},
+	{
+		path: '/messages',
+		name: 'Messages',
+		component: () => import('../views/messages/index.vue')
 	}
 ]
 

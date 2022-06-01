@@ -63,3 +63,14 @@ export const productInfo = (params: any) => {
         params: params
     })
 }
+
+/**
+ * 查询sku列表
+ * @returns
+ */
+export const getSkuList = (params: object) => {
+    return request.get({
+        url: '/product/sku/list',
+        params: params
+    })
+}
