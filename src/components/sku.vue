@@ -42,6 +42,7 @@
 <script lang='ts'>
 import { defineComponent, ref, PropType, toRef, onMounted } from 'vue'
 import { Product } from "@src/models";
+import { addCartItem } from '@src/api/order'
 import { Toast } from 'vant';
 export default defineComponent({
 	name: 'Sku',
@@ -101,7 +102,12 @@ export default defineComponent({
       console.log(selectAttrStr,selectedSku.value)
     }
     const addShoppingCart = () => {
-      Toast.success('添加成功')
+      addCartItem({
+        skuId: selectedSku.value.id,
+        num: num.value
+      }).then(res => {
+        Toast.success('添加成功')
+      })
     }
     const submitOrder = () => {
       Toast.success('提交成功')
