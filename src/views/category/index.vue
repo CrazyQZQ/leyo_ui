@@ -40,16 +40,16 @@ export default defineComponent({
 		let categories = ref([])
 		let subCategories = ref([])
 		onMounted(async () => {
-			let res: any = await typeList({parentId: 0})
+			await typeList({parentId: 0}).then(res => {
+        categories.value = res.rows
+        if(categories.value.length > 0){
+          typeList({parentId: res.data[0].id}).then(res1 => {
+            subCategories.value = res1.rows
+          })
+        }
+      })
 			
-			if(res.code === 200){
-				categories.value = res.rows
-				if(categories.value.length > 0){
-					let res1: any = await typeList({parentId: res.data[0].id})
-					subCategories.value = res1.rows
-				}
-			}
-			let res2: any = await brandList({parentId: 0})
+			// let res2: any = await brandList({parentId: 0})
 		})
 
 

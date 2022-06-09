@@ -1,6 +1,6 @@
 import axios from 'axios'
 import type { AxiosResponse, AxiosInstance } from 'axios'
-import type { RequestInterceptors, RequestConfig } from './type'
+import type { RequestInterceptors, RequestConfig, BasicException } from './type'
 import { BaseResponseType } from "@src/models";
 import { Toast,Dialog } from 'vant'
 import router from '@src/router'
@@ -43,7 +43,6 @@ class configrequest {
         if (config.url !== '/system/client_login' && store.state.auth.token) {
           config.headers['Authorization'] = `Bearer ${store.state.auth.token.access_token}`
         }
-        console.log(config);
         return config
       },
       (err) => {
@@ -57,21 +56,10 @@ class configrequest {
         Toast.clear()
         const res = response.data
         if (res.code !== 200) {
-          // token 过期
-          if (res.code === 401) {
-            // 警告提示窗
-            return
-          }
-          if (res.code == 403) {
-            Dialog.alert({
-              title: '警告',
-              message: res.msg
-            }).then(() => {})
-            return
-          }
           Toast.fail(res.msg)
           // 若后台返回错误值，此处返回对应错误对象，下面 error 就会接收
-          return Promise.reject(new Error(res.msg || 'Error'))
+          // return Promise.reject(new BasicException(res.code, res.msg || 'Error'))
+          return Promise.reject(new Error(res.code || '500'))
         } else {
           // 注意返回值
           return response.data
@@ -128,7 +116,6 @@ class configrequest {
           error.message = '连接到服务器失败，请联系管理员'
         }
         Toast(error.message)
-        // store.auth.clearAuth()
         store.dispatch('clearAuth')
         return Promise.reject(error)
       }
@@ -150,7 +137,8 @@ class configrequest {
           const data = (res as any) as BaseResponseType
           if(data.code === 200){
             resolve(res)
-          }else if(data.code === 401){
+          }else if(data.code === 1004){
+            console.log(res)
             Toast.fail("用户未登录！")
             resolve(res)
             router.push({ path: '/login' })
@@ -161,7 +149,18 @@ class configrequest {
         })
         // 如果有错误返回错误
         .catch((err) => {
-          reject(err)
+          router.push({ path: '/login' })
+          // if(err.)
+          // reject(err)
+          // if(data.code === 1004){
+          //   console.log(res)
+          //   Toast.fail("用户未登录！")
+          //   resolve(err)
+          //   router.push({ path: '/login' })
+          // }else {
+          //   // Toast.fail(data.msg)
+          //   resolve(err)
+          // }
           return err
         })
     })

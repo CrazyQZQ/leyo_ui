@@ -60,14 +60,15 @@ export default defineComponent({
 		let brands = ref([])
 		let announcement = ref('暂无公告')
 		onMounted(async () => {
-			let res: any = await getBanners()
-			banners.value = res.data.map((e: { imageUrl: any; }) => {
-				return {
-					imgUrl: e.imageUrl,
-					url: ''
-				}
-			})
-
+			await getBanners().then(res => {
+        console.log(res)
+        banners.value = res?.data.map((e: { imageUrl: any; }) => {
+          return {
+            imgUrl: e.imageUrl,
+            url: ''
+          }
+        })
+      })
 			let res2: any = await getAnnouncement()
 			announcement.value = res2.data
 
@@ -77,141 +78,6 @@ export default defineComponent({
 			let res4: any = await brandList({parentId: 0})
 			brands.value = res4.rows
 		})
-
-		const hotList = [
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '水洗棉_床单',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/65a7ae2867d891a241dd8291a9037c84.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/cc507ff0ce7cafc1012885a01fb1942a.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/4628932649a190c464d138c9236591fa.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/d04070745e3e6b7588aba519d48ad9d6.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/dd9cd8d2dae44d4319ab21919021435b.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '水洗棉_床单双人款',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/567f5588c5c86eeca8c94413d7c45e47.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/09f2f2e348111984dd2c65dd8bcbf5d8.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/0001332cb0db9939076f56c1dddbad26.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/0001332cb0db9939076f56c1dddbad26.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/d04070745e3e6b7588aba519d48ad9d6.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/dd9cd8d2dae44d4319ab21919021435b.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '水洗棉_床单双人款',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/567f5588c5c86eeca8c94413d7c45e47.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/d04070745e3e6b7588aba519d48ad9d6.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/dd9cd8d2dae44d4319ab21919021435b.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '水洗棉_床单双人款',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/567f5588c5c86eeca8c94413d7c45e47.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/d04070745e3e6b7588aba519d48ad9d6.png'
-			},
-			{
-				goodsId: '3465',
-				goodsMiniPrice: '3800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/dd9cd8d2dae44d4319ab21919021435b.png'
-			},
-			{
-				goodsId: '3455',
-				goodsMiniPrice: '4800',
-				goodsName: '水洗棉_床单双人款',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/567f5588c5c86eeca8c94413d7c45e47.png'
-			},
-			{
-				goodsId: '3469',
-				goodsMiniPrice: '2800',
-				goodsName: '懒人沙发',
-				goodsPicUrl: 'https://yanxuan.nosdn.127.net/c8af5398744d2ed87d2459ec3d29d83e.png'
-			}
-		]
 
 		const keyWordChange = (e: string) => {
 			console.log('keyword:', e)
@@ -227,7 +93,6 @@ export default defineComponent({
 			cateGoryList,
 			brands,
 			banners,
-			hotList,
 			announcement,
 			keyWordChange,
 			toSearch

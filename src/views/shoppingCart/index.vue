@@ -60,8 +60,11 @@ export default {
         onMounted(async () => {
           let userId = store.state.auth.userInfo.userId
           if (userId) {
-            let res: any = await getShopingCartItems({ userId: userId })
-            cartItems.value = res.data
+            await getShopingCartItems({ userId: userId }).then(res => {
+              cartItems.value = res.data
+            }).catch(err => {
+              cartItems.value = []
+            })
           }
         })
         const onSubmit = () => {
@@ -100,7 +103,7 @@ export default {
       watch(cartItems, (newValue, oldValue) => {
         let flag = true
         totalPrice.value = 0
-        newValue.forEach(item => {
+        newValue?.forEach(item => {
           if(item.checked) {
             totalPrice.value += item.sku.price * item.num
           }else {

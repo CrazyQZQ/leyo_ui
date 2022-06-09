@@ -202,9 +202,13 @@ interface Sku {
     productId: number;
     spec: string;
     price: number;
+    originalPrice: number;
     stock: number;
     sales: number;
     imageUrl: string;
+    productName: string;
+    brandName: string;
+    typeName: string;
     skuAttributes: ISkuAttributesItem[];
 }
 interface SkuAttributes {

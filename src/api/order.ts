@@ -67,6 +67,15 @@ export const deleteCartItem = (params: object) => {
     })
 }
 
+/**
+ * 查询热卖商品
+ */
+export const hotSales = () => {
+    return request.get({
+        url: '/order/hotSales'
+    })
+}
+
 
 
 
