@@ -43,10 +43,10 @@ export default defineComponent({
 			let res: any = await typeList({parentId: 0})
 			
 			if(res.code === 200){
-				categories.value = res.data
+				categories.value = res.rows
 				if(categories.value.length > 0){
 					let res1: any = await typeList({parentId: res.data[0].id})
-					subCategories.value = res1.data
+					subCategories.value = res1.rows
 				}
 			}
 			let res2: any = await brandList({parentId: 0})
@@ -79,7 +79,7 @@ export default defineComponent({
 		}
 		const onChangeCategory = async (index: number) => {
 			let res: any = await typeList({parentId: categories.value[index]['id']})
-			subCategories.value = res.data
+			subCategories.value = res.rows
 			console.log(subCategories.value);
 			
 		}

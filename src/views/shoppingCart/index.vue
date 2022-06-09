@@ -15,7 +15,7 @@
                 </van-card>
             </van-swipe-cell>
         </div>
-        <van-submit-bar class="submit-bar" :price="3050" button-text="提交订单" @submit="onSubmit">
+        <van-submit-bar class="submit-bar" :price="totalPrice" button-text="提交订单" @submit="onSubmit">
             <van-checkbox v-model="selectAll" @click="click" checked-color="#b4282d">全选</van-checkbox>
             <template #tip>
                 你的收货地址不支持配送, <span @click="onClickLink">修改地址</span>
@@ -25,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, ref , onMounted} from 'vue';
+import { reactive, toRefs, ref, onMounted, watch} from 'vue';
 import { useRouter } from 'vue-router';
 import { getShopingCartItems,updateCartItemNum } from '@src/api/order'
 import { IGlobalState } from '@src/store'
@@ -50,6 +50,7 @@ export default {
         })
 
         let selectAll = ref(false)
+        let totalPrice = ref(0)
 
         const goBack = () => {
             router.go(-1)
@@ -57,14 +58,18 @@ export default {
 
         let cartItems = ref([])
         onMounted(async () => {
-          // let userId = store.state.auth.userInfo.userId
-          let userId = 1
+          let userId = store.state.auth.userInfo.userId
           if (userId) {
             let res: any = await getShopingCartItems({ userId: userId })
             cartItems.value = res.data
           }
         })
         const onSubmit = () => {
+          let anySelected = cartItems.value.find(item => item.checked == true)
+          if (!anySelected) {
+            Toast.fail('请选择商品')
+            return
+          }
             router.push('/submitOrder')
         }
         const click = (event: MouseEvent) => {
@@ -92,6 +97,20 @@ export default {
             return spec
         }
 
+      watch(cartItems, (newValue, oldValue) => {
+        let flag = true
+        totalPrice.value = 0
+        newValue.forEach(item => {
+          if(item.checked) {
+            totalPrice.value += item.sku.price * item.num
+          }else {
+            flag = false
+          }
+        })
+        selectAll.value = flag
+        totalPrice.value = totalPrice.value*100
+      }, { deep: true })
+
         return {
             ...toRefs(state),
             goBack,
@@ -100,7 +119,8 @@ export default {
             selectAll,
             numChange,
             click,
-            formatSpec
+            formatSpec,
+            totalPrice
         }
     }
 }

@@ -4,10 +4,6 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/Login',
 		name: 'Login',
-		// component: {
-		// 	default: () => import('../views/home/Home.vue'),
-		// 	Tabbar: () => import('../components/Tabbar.vue')
-		// }
 		component: () => import('@src/views/login/Login.vue')
 	},
 	{
@@ -42,9 +38,19 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/order',
 		name: 'order',
 		components: {
-			default: () => import('../views/order/index.vue'),
+			default: () => import('../views/order/list/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
 		}
+	},
+	{
+		path: '/orderDetail',
+		name: 'OrderDetail',
+		component: () => import('../views/order/detail/index.vue')
+	},
+	{
+		path: '/submitOrder',
+		name: 'SubmitOrder',
+		component: () => import('../views/order/submit/index.vue')
 	},
 	{
 		path: '/shoppingCart',
@@ -71,16 +77,6 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/addressEdit',
 		name: 'AddressEdit',
 		component: () => import('../views/address/addressEdit.vue')
-	},
-	{
-		path: '/orderDetail',
-		name: 'OrderDetail',
-		component: () => import('../views/order/orderDetail.vue')
-	},
-	{
-		path: '/submitOrder',
-		name: 'SubmitOrder',
-		component: () => import('../views/order/submitOrder.vue')
 	},
 	{
 		path: '/messages',

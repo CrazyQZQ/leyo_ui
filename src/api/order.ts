@@ -6,9 +6,20 @@ import request from "@src/request";
  */
 export const getOrderList = (params: object) => {
     return request.get({
-        url:'/order', 
+        url:'/order/list', 
         params: params
     });
+}
+
+/**
+ * 保存订单
+ * @param params
+ */
+export const saveOrder = (params: object) => {
+    return request.post({
+        url: '/order/saveOrder',
+        params: params
+    })
 }
 
 /**

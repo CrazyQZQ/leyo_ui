@@ -62,7 +62,7 @@
 			<section class="h-14">
 				<van-action-bar :safe-area-inset-bottom="false">
 					<van-action-bar-icon icon="chat-o" text="客服" color="#7869DE" />
-					<van-action-bar-icon icon="cart-o" text="购物车" color="#7869DE" />
+					<van-action-bar-icon icon="cart-o" text="购物车" @click="goToUrL('/shoppingCart')"  color="#7869DE" />
 					<van-action-bar-icon icon="shop-o" text="店铺" color="#7869DE" />
 					<van-action-bar-button type="warning" text="加入购物车" @click="selectSku(1)"/>
 					<van-action-bar-button type="danger" text="立即购买" @click="selectSku(2)"/>
@@ -108,7 +108,7 @@ export default defineComponent({
 			{ name: '二维码', icon: 'qrcode' }
 		]
 		const goToUrL = (url: string) => {
-			if (url != '') window.open(url)
+      router.push(url)
 		}
 		const onClickLeft = () => {
 			router.go(-1)
