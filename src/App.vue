@@ -1,5 +1,5 @@
 <template :class="isDark ? 'dark' : ''">
-  <div style="overflow-y: hidden;overflow-x: hidden;">
+  <div style="overflow-y: hidden;overflow-x: hidden;" class="h-full">
 		<!-- vue3.0不能采用种形式来实现，否则要报错，路由跳转动画也无法实现 -->
 		<!-- <transition name="slide-left">
 			<router-view></router-view>

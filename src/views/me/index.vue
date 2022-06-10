@@ -1,50 +1,65 @@
 <template>
-  <div class="bg-gray-100 user-box">
-    <div class="h-40 w-full bg-purple-500 rounded-b-6xl"></div>
-    <section class="w-full flex justify-center px-4 -mt-16">
-      <div class="h-40 w-full bg-white rounded-lg">
-        <van-skeleton title :avatar="true" :row="3" :loading="loading">
-          <div class="user-info">
-            <div class="info">
-              <img class="h-25 w-25" :src="userInfo.avatar" />
-              <div class="user-desc">
-                <span>昵称：{{ userInfo.nickName }}</span>
-                <span>登录名：{{ userInfo.userName }}</span>
-                <span>手机号：{{ userInfo.phoneNumber }}</span>
-              </div>
-            </div>
-          </div>
-        </van-skeleton>
+  <div class="relative bg-gray-100" style="height: calc(100vh - 3.15rem);">
+    <!--    <div class="h-40 w-full bg-purple-500 rounded-b-6xl"></div>-->
+    <div class="w-full h-50 p-4">
+      <div class="grid grid-rows-3 grid-cols-4 grid-flow-col gap-2">
+        <div class="row-span-3 w-24">
+          <van-image round width="5rem" height="5rem" :src="userInfo.avatar"/>
+        </div>
+        <div class="col-span-3 font-bold">{{ userInfo.nickName }}</div>
+        <div class="col-span-3 text-gray-400">登录名：{{ userInfo.userName }}</div>
+        <div class="col-span-3">手机号：{{ userInfo.phoneNumber }}</div>
       </div>
-    </section>
-    <div>
-      <ul class="user-list">
-          <li class="van-hairline--bottom" @click="goTo('/order', {})">
-            <span>我的订单</span>
-            <van-icon name="arrow" />
-          </li>
-          <li class="van-hairline--bottom" @click="goTo('/setting', {})">
-            <span>账号管理</span>
-            <van-icon name="arrow" />
-          </li>
-          <li class="van-hairline--bottom" @click="goTo('/address', {})">
-            <span>地址管理</span>
-            <van-icon name="arrow" />
-          </li>
-          <li @click="goTo('/about', {})">
-            <span>关于我们</span>
-            <van-icon name="arrow" />
-          </li>
-        </ul>
     </div>
+    <section class="w-full justify-center px-4">
+      <div class="grid grid-cols-3 grid-cols-5 gap-2 bg-white rounded-lg h-50 p-2">
+        <div class="relative col-span-5">
+          <span class="font-black">我的订单</span>
+          <span class="absolute right-0 text-xs" @click="$router.push('/order?status=')">全部 ></span>
+        </div>
+        <div class="row-span-2 text-center" v-for="(item, index) in orders" :key="index" @click="$router.push('/order?status='+item.status)">
+          <van-icon :name="item.icon" size="1.5rem" :badge="item.count"/>
+          <span class="block text-xs">{{ item.title }}</span>
+        </div>
+      </div>
+
+    </section>
+    <!--    <section class="w-full flex justify-center px-4 -mt-16">-->
+    <!--      &lt;!&ndash;      我的订单&ndash;&gt;-->
+    <!--      <div class="rounded-lg bg-white h10">-->
+    <!--        <div class="h-full w5">-->
+    <!--          <van-icon name="peer-pay"/>-->
+    <!--        </div>-->
+    <!--        <ul class="user-list">-->
+    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/order', {})">-->
+    <!--            <span>我的订单</span>-->
+    <!--            <van-icon name="arrow"/>-->
+    <!--          </li>-->
+    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/setting', {})">-->
+    <!--            <span>账号管理</span>-->
+    <!--            <van-icon name="arrow"/>-->
+    <!--          </li>-->
+    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/address', {})">-->
+    <!--            <span>地址管理</span>-->
+    <!--            <van-icon name="arrow"/>-->
+    <!--          </li>-->
+    <!--          <li @click="goTo('/about', {})">-->
+    <!--            <span>关于我们</span>-->
+    <!--            <van-icon name="arrow"/>-->
+    <!--          </li>-->
+    <!--        </ul>-->
+    <!--      </div>-->
+    <!--    </section>-->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, computed } from 'vue'
-import { useStore } from 'vuex'
-import { useRouter } from 'vue-router'
-import { IGlobalState } from '@src/store'
+import {defineComponent, onMounted, ref, computed} from 'vue'
+import {useStore} from 'vuex'
+import {useRouter} from 'vue-router'
+import {IGlobalState} from '@src/store'
+import { getStatusCount } from '@src/api/order.ts'
+
 export default defineComponent({
   name: 'me',
 
@@ -55,113 +70,65 @@ export default defineComponent({
     const userInfo = computed(() => {
       return store.state.auth.userInfo
     })
+
+    const orders = ref([
+      {
+        icon: "peer-pay",
+        title: "待付款",
+        status: 0,
+        count: 0
+      },
+      {
+        icon: "send-gift-o",
+        title: "待发货",
+        status: 1,
+        count: 0
+      },
+      {
+        icon: "logistics",
+        title: "待收货",
+        status: 2,
+        count: 0
+      },
+      {
+        icon: "chat-o",
+        title: "待评价",
+        status: 3,
+        count: 0
+      },
+      {
+        icon: "refund-o",
+        title: "退款/售后",
+        status: 4,
+        count: 0
+      }
+    ])
+
+    onMounted(async () => {
+      const res = await getStatusCount({userId: store.state.auth.userInfo.userId})
+      if (res.code === 200) {
+        res.data.forEach(item => {
+          const index = orders.value.findIndex(i => i.status === item.status)
+          if (index !== -1) {
+            orders.value[index].count = item.count
+          }
+        })
+      }
+    })
     const goBack = () => {
       router.go(-1)
     }
 
     const goTo = (r: string, query: any) => {
-      router.push({ path: r, query: query || {} })
+      router.push({path: r, query: query || {}})
     }
     return {
       userInfo,
       loading,
       goBack,
-      goTo
+      goTo,
+      orders
     }
   }
 })
 </script>
-<style lang="less" scoped>
-@import '@src/common/style/mixin';
-
-.user-box {
-  .user-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 10000;
-    .fj();
-    .wh(100%, 44px);
-    line-height: 44px;
-    padding: 0 10px;
-    .boxSizing();
-    color: #252525;
-    background: #fff;
-    border-bottom: 1px solid #dcdcdc;
-
-    .user-name {
-      font-size: 14px;
-    }
-  }
-
-  .user-info {
-    width: 94%;
-    margin: 10px;
-    height: 115px;
-    background: linear-gradient(90deg, @primary, #51c7c7);
-    box-shadow: 0 2px 5px #269090;
-    border-radius: 6px;
-
-    .info {
-      position: relative;
-      display: flex;
-      width: 100%;
-      height: 100%;
-      padding: 25px 20px;
-      .boxSizing();
-
-      img {
-        .wh(60px, 60px);
-        border-radius: 50%;
-        margin-top: 4px;
-      }
-
-      .user-desc {
-        display: flex;
-        flex-direction: column;
-        margin-left: 10px;
-        line-height: 20px;
-        font-size: 14px;
-        color: #fff;
-
-        span {
-          color: #fff;
-          font-size: 14px;
-          padding: 2px 0;
-        }
-      }
-
-      .account-setting {
-        position: absolute;
-        top: 10px;
-        right: 20px;
-        font-size: 13px;
-        color: #fff;
-
-        .van-icon-setting-o {
-          font-size: 16px;
-          vertical-align: -3px;
-          margin-right: 4px;
-        }
-      }
-    }
-  }
-
-  .user-list {
-    padding: 0 20px;
-    margin-top: 20px;
-
-    li {
-      height: 40px;
-      line-height: 40px;
-      display: flex;
-      justify-content: space-between;
-      font-size: 14px;
-
-      .van-icon-arrow {
-        margin-top: 13px;
-      }
-    }
-  }
-}
-</style>

@@ -2,7 +2,7 @@
 	<van-swipe class="w-full rounded-md shadow-sm h-full" :autoplay="3000" indicator-color="#fff">
 		<van-swipe-item v-for="(item, index) in list" :key="index">
 <!--			<img :src="item.imgUrl" alt="" @click="goToUrL(item.url)" />-->
-      <van-image fit="fill" :src="item.imgUrl" />
+      <van-image fit="cover" position="left" class="h-full" :src="item.imgUrl" />
 		</van-swipe-item>
 	</van-swipe>
 </template>

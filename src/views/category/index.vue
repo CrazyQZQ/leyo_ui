@@ -18,7 +18,7 @@
 				<Swiper :list="banners"></Swiper>
 			</div>
 			<van-grid :column-num="3" gutter="30" :border="false" class="mt-4">
-				<van-grid-item v-for="(item,index) in subCategories" :key="index">
+				<van-grid-item v-for="(item,index) in subCategories" :key="index" class="shadow-md">
 					<van-image radius="5" width="3rem" height="3rem" src="http://124.221.239.207:9000/qqcloud/2022-05-10/qps1.jpg" />
 					<span class="text-gray-500 text-sm py-3">{{item['name']}}</span>
 				</van-grid-item>
@@ -43,7 +43,7 @@ export default defineComponent({
 			await typeList({parentId: 0}).then(res => {
         categories.value = res.rows
         if(categories.value.length > 0){
-          typeList({parentId: res.data[0].id}).then(res1 => {
+          typeList({parentId: res.rows[0].id}).then(res1 => {
             subCategories.value = res1.rows
           })
         }

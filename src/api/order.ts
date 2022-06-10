@@ -18,7 +18,8 @@ export const getOrderList = (params: object) => {
 export const saveOrder = (params: object) => {
     return request.post({
         url: '/order/saveOrder',
-        params: params
+        data: params,
+        headers: { 'Content-Type': 'application/json' }
     })
 }
 
@@ -73,6 +74,16 @@ export const deleteCartItem = (params: object) => {
 export const hotSales = () => {
     return request.get({
         url: '/order/hotSales'
+    })
+}
+
+/**
+ * 查询订单各种状态数量
+ */
+export const getStatusCount = (params: object) => {
+    return request.get({
+        url: '/order/getStatusCount',
+        params: params
     })
 }
 
