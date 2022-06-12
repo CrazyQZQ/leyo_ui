@@ -1,7 +1,7 @@
 <template>
   <div class="divide-y-2 divide-gray-500 divide-opacity-5">
     <section class="flex m-1.5">
-      <van-image width="100" height="100" :src="selectedSku?.imageUrl"/>
+      <van-image width="100" height="100" :src="selectedSku?.imageUrl" />
       <div class="flex flex-col justify-end p-3">
         <div class="text-red-500 text-2xl">
           <span>￥ {{ selectedSku ? selectedSku.price : '--' }}</span>
@@ -17,9 +17,9 @@
           {{ item.name }}
         </p>
         <van-row gutter="10">
-          <van-col v-for="(value,index) in item.values" :key="value.id" @click="click(item.id,value.id)">
+          <van-col v-for="(value, index) in item.values" :key="value.id" @click="click(item.id, value.id)">
             <div class="attr-val inline-flex items-center justify-center bg-gray-100 cursor-pointer"
-                 :class="value.checked ? 'checked' : 'uncheck'">
+              :class="value.checked ? 'checked' : 'uncheck'">
               <span class="text-sm p-1">{{ value.name }}</span>
             </div>
           </van-col>
@@ -27,7 +27,7 @@
       </section>
       <section class="py-2 flex justify-between">
         <span>购买数量</span>
-        <van-stepper v-model.number="num" :disabled="!selectedSku"/>
+        <van-stepper v-model.number="num" :disabled="!selectedSku" />
       </section>
     </div>
   </div>
@@ -41,69 +41,80 @@
 </template>
 
 <script lang='ts'>
-import {defineComponent, ref, PropType, toRef, onMounted} from 'vue'
-import {Product} from "@src/models";
-import {addCartItem} from '@src/api/order'
-import {Toast} from 'vant';
+import { defineComponent, ref, Ref, PropType, toRef, onMounted } from 'vue'
+import { Product, Sku, Attribute } from "@src/models/product";
+import { addCartItem } from '@src/api/order'
+import { Toast } from 'vant';
 import * as Types from '@src/store/modules/order/types'
-import {IGlobalState} from '@src/store'
-import {useStore} from 'vuex'
+import { IGlobalState } from '@src/store'
+import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'Sku',
   props: {
-    product: Object,
+    product: {
+      type: Object as PropType<Product>,
+      required: true
+    },
     submitType: Number
   },
   setup(props) {
     const router = useRouter()
     const store = useStore<IGlobalState>()
+    const num = ref(0)
     let product = toRef(props, 'product')
     let submitType = toRef(props, 'submitType')
-    let skus = ref([])
-    let attributes = ref([])
-    let selectAttr = []
-    let selectedSku = ref({})
-    skus.value = product.value.skus
-    attributes.value = product.value.attributes
+    let skus: Ref<Sku[]> = ref([])
+    let attributes: Ref<Attribute[]> = ref([])
+    let selectAttr: { keyId: any; valId: any; }[] = []
+    let selectedSku: Ref<Sku> = ref({})
+    skus.value = product.value.skus || []
+    attributes.value = product.value.attributes || []
 
     onMounted(() => {
       getDefaultSku()
     })
 
+    // 获取默认展示sku
     const getDefaultSku = () => {
+      skus.value.forEach(item => {
+        item.productName = product.value.name
+        item.brandName = product.value.brandName
+        
+      })
       if (skus.value.length > 0) {
         let sku = skus.value[0]
         selectedSku.value = sku
         attributes.value.forEach(item => {
           item.values = item.values.map((value) => {
-            value.checked = sku.spec.includes(`"keyId":${item.id},"valId":${value.id}`)
+            value.checked = sku.spec?.includes(`"keyId":${item.id},"valId":${value.id}`)
             return value
           })
         })
       }
     }
 
-    const num = ref(0)
-    const click = (keyId, valId) => {
+    const click = (keyId: any, valId: any) => {
       selectAttr.length = 0
       attributes.value.forEach(item => {
-        item.values.forEach(value => {
+        item.values.forEach((value) => {
           if (item.id === keyId && value.id === valId) {
             value.checked = true
           } else if (item.id === keyId && value.id !== valId) {
             value.checked = false
           }
           if (value.checked) {
-            selectAttr.push({keyId: item.id, valId: value.id})
+            selectAttr.push({ keyId: item.id, valId: value.id })
           }
         })
       })
       let selectAttrStr = JSON.stringify(selectAttr);
       selectedSku.value = skus.value.find(item => {
         return item.spec === selectAttrStr
-      })
+      }) || {}
+      console.log(selectedSku.value);
+      
       num.value = 0
     }
     const addShoppingCart = () => {
@@ -119,21 +130,21 @@ export default defineComponent({
       let orderDetail = {
         skuId: selectedSku.value.id,
         count: num.value,
-        amount: selectedSku.value.price * num.value,
-        sku: {...selectedSku.value}
+        amount: selectedSku.value.price || 0 * num.value,
+        sku: { ...selectedSku.value }
       }
       let orderInfo = {
         order: {
-          totalAmount: selectedSku.value.price * num.value,
+          totalAmount: selectedSku.value.price || 0 * num.value,
           totalCount: num.value
         },
         orderDetailList: [orderDetail],
         cartIds: [],
         accountId: 0
       }
+      
       store.dispatch(`order/${Types.CAHCE_ORDER_INFO}`, orderInfo)
       router.push('/submitOrder')
-      // Toast.success('提交成功')
     }
     return {
       num,

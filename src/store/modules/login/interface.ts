@@ -1,4 +1,4 @@
-import { User,Token } from '@src/models'
+import { User,Token } from '@src/models/User'
 
 /**
  * 用户信息

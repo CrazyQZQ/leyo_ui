@@ -14,41 +14,41 @@
 		<!-- swipe -->
 		<van-swipe class="w-full h-90 rounded-md shadow-sm" :autoplay="3000" indicator-color="#fff">
 			<van-swipe-item v-for="(item, index) in product.imageUrls" :key="index">
-				<img :src="item" :alt="product.name"/>
+				<img :src="item" :alt="product.name" />
 			</van-swipe-item>
 		</van-swipe>
 		<div class="bg-gray-50 overflow-scroll">
 			<!-- title -->
 			<section class="flex justify-between items-center bg-white divide-x divide-gray-200">
 				<div class="p-3">
-					<span class="font-semibold text-base leading-3">{{product.name}}</span>
-					<p class="text-gray-500 text-sm">品牌：{{product.brandName}}</p>
-<!--					<p class="text-gray-500 text-sm">系列：秋季上新</p>-->
+					<span class="font-semibold text-base leading-3">{{ product.name }}</span>
+					<p class="text-gray-500 text-sm">品牌：{{ product.brandName }}</p>
+					<!--					<p class="text-gray-500 text-sm">系列：秋季上新</p>-->
 				</div>
 				<div class="min-w-1/4 ">
 					<p class="text-center">
 						<van-tag round color="#7869DE" size="large">优惠价</van-tag>
 					</p>
-					<p class="text-yellow-500 font-bold text-lg text-center">￥{{product.price}}</p>
+					<p class="text-yellow-500 font-bold text-lg text-center">￥{{ product.price }}</p>
 				</div>
 			</section>
 			<!-- Price -->
 			<section class="mt-2 bg-white divide-y divide-gray-50">
 				<p class="flex justify-between p-3 text-gray-500 text-xs">
 					<span>指导零售价</span>
-					<span>￥{{product.price}}</span>
+					<span>￥{{ product.price }}</span>
 				</p>
 				<p class="flex justify-between p-3 text-gray-500 text-xs">
 					<span>最低购买数量</span>
 					<span>999件</span>
 				</p>
-<!--				<p class="flex justify-between p-3 text-gray-500 text-xs" @click="selectSku">-->
-<!--					<span>已选</span>-->
-<!--					<span class="text-black">-->
-<!--						请选择规格 数量-->
-<!--						<van-icon name="arrow" />-->
-<!--					</span>-->
-<!--				</p>-->
+				<!--				<p class="flex justify-between p-3 text-gray-500 text-xs" @click="selectSku">-->
+				<!--					<span>已选</span>-->
+				<!--					<span class="text-black">-->
+				<!--						请选择规格 数量-->
+				<!--						<van-icon name="arrow" />-->
+				<!--					</span>-->
+				<!--				</p>-->
 			</section>
 			<!-- Tab -->
 			<section class="mt-2 bg-white">
@@ -62,14 +62,14 @@
 			<section class="h-14">
 				<van-action-bar :safe-area-inset-bottom="false">
 					<van-action-bar-icon icon="chat-o" text="客服" color="#7869DE" />
-					<van-action-bar-icon icon="cart-o" text="购物车" @click="goToUrL('/shoppingCart')"  color="#7869DE" />
+					<van-action-bar-icon icon="cart-o" text="购物车" @click="goToUrL('/shoppingCart')" color="#7869DE" />
 					<van-action-bar-icon icon="shop-o" text="店铺" color="#7869DE" />
-					<van-action-bar-button type="warning" text="加入购物车" @click="selectSku(1)"/>
-					<van-action-bar-button type="danger" text="立即购买" @click="selectSku(2)"/>
+					<van-action-bar-button type="warning" text="加入购物车" @click="selectSku(1)" />
+					<van-action-bar-button type="danger" text="立即购买" @click="selectSku(2)" />
 				</van-action-bar>
-        <van-popup v-model:show="show" round position="bottom" :style="{ padding: '15px' }">
-          <sku :product="product" :submitType="submitType"></sku>
-        </van-popup>
+				<van-popup v-model:show="show" round position="bottom" :style="{ padding: '15px' }">
+					<sku :product="product" :submitType="submitType"></sku>
+				</van-popup>
 			</section>
 		</div>
 		<van-share-sheet v-model:show="showShare" title="立即分享给好友" :options="options" @select="onSelect" />
@@ -78,11 +78,11 @@
 
 <script lang='ts'>
 import { defineComponent, ref, onMounted, Ref } from 'vue'
-import { useRouter,useRoute } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { Toast } from 'vant';
 import { useToggle } from '@vant/use'
 import { productInfo } from "@src/api/product";
-import { Product } from "@src/models";
+import { Product } from "@src/models/product";
 import sku from '@components/sku.vue';
 export default defineComponent({
 	name: 'ProductDetail',
@@ -95,11 +95,11 @@ export default defineComponent({
 		onMounted(async () => {
 			let res: any = await productInfo({ id: route.query.id })
 			product.value = res.data as Product
-			product.value.imageUrls = product.value.imageUrls?product.value.imageUrls:[]
+			product.value.imageUrls = product.value.imageUrls ? product.value.imageUrls : []
 		})
 		const showShare = ref(false)
 		const router = useRouter()
-    let submitType: Ref<number> = ref(1)
+		let submitType: Ref<number> = ref(1)
 		const options = [
 			{ name: '微信', icon: 'wechat' },
 			{ name: '微博', icon: 'weibo' },
@@ -108,7 +108,7 @@ export default defineComponent({
 			{ name: '二维码', icon: 'qrcode' }
 		]
 		const goToUrL = (url: string) => {
-      router.push(url)
+			router.push(url)
 		}
 		const onClickLeft = () => {
 			router.go(-1)
@@ -124,7 +124,7 @@ export default defineComponent({
 		toggle(false)
 		const selectSku = (type: number) => {
 			toggle(true)
-      submitType.value = type
+			submitType.value = type
 		}
 		const activeName = ref('a')
 		return {
@@ -138,7 +138,7 @@ export default defineComponent({
 			selectSku,
 			activeName,
 			product,
-      submitType
+			submitType
 		}
 	}
 })

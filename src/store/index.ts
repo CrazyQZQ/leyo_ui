@@ -19,7 +19,6 @@ const store = createStore<IGlobalState>({
   getters,
   plugins: [
     createPersistedState({
-      // storage: window.sessionStorage,
       reducer: (state) => ({
         auth: state.auth,
         order: state.order

@@ -10,7 +10,7 @@
 	<div class="flex">
 		<van-sidebar v-model="active" class="h-148" @change="onChangeCategory">
 			<template v-for="(item, index) in categories" :key="index">
-				<van-sidebar-item :title="item['name']" />
+				<van-sidebar-item :title="item.name" />
 			</template>
 		</van-sidebar>
 		<div class="w-4/5 h-148 overflow-y-auto">
@@ -18,9 +18,10 @@
 				<Swiper :list="banners"></Swiper>
 			</div>
 			<van-grid :column-num="3" gutter="30" :border="false" class="mt-4">
-				<van-grid-item v-for="(item,index) in subCategories" :key="index" class="shadow-md">
-					<van-image radius="5" width="3rem" height="3rem" src="http://124.221.239.207:9000/qqcloud/2022-05-10/qps1.jpg" />
-					<span class="text-gray-500 text-sm py-3">{{item['name']}}</span>
+				<van-grid-item v-for="(item, index) in subCategories" :key="index">
+					<van-image radius="5" width="3rem" height="3rem"
+						:src="item.imageUrls?item.imageUrls[0]:''" />
+					<span class="text-gray-500 text-sm py-3">{{ item.name }}</span>
 				</van-grid-item>
 			</van-grid>
 		</div>
@@ -28,27 +29,31 @@
 </template>
 
 <script lang='ts'>
-import { computed, defineComponent, onMounted, ref } from 'vue'
+import { computed, defineComponent, onMounted, ref, Ref } from 'vue'
 import Swiper from '@src/components/Swiper.vue'
 import { typeList, brandList } from "@src/api/product";
+import { BaseResponseType } from "@src/models/common";
+import { ProductType } from "@src/models/product";
 export default defineComponent({
 	name: 'Home',
 	components: {
 		Swiper
 	},
 	setup() {
-		let categories = ref([])
-		let subCategories = ref([])
+		let categories: Ref<ProductType[]> = ref([])
+		let subCategories: Ref<ProductType[]> = ref([])
 		onMounted(async () => {
-			await typeList({parentId: 0}).then(res => {
-        categories.value = res.rows
-        if(categories.value.length > 0){
-          typeList({parentId: res.rows[0].id}).then(res1 => {
-            subCategories.value = res1.rows
-          })
-        }
-      })
-			
+			await typeList({ parentId: 0 }).then(res => {
+				let r = res as BaseResponseType<ProductType>
+				categories.value = r.rows || []
+				if (categories.value.length > 0) {
+					typeList({ parentId: categories.value[0].id }).then(res1 => {
+						let r1 = res1 as BaseResponseType<ProductType>
+						subCategories.value = r1.rows || []
+					})
+				}
+			})
+
 			// let res2: any = await brandList({parentId: 0})
 		})
 
@@ -72,16 +77,14 @@ export default defineComponent({
 			})
 		)
 		const onClickLeft = () => {
-			console.log('1')
 		}
 		const onClickRight = () => {
-			console.log('2')
 		}
 		const onChangeCategory = async (index: number) => {
-			let res: any = await typeList({parentId: categories.value[index]['id']})
+			let res: any = await typeList({ parentId: categories.value[index]['id'] })
 			subCategories.value = res.rows
 			console.log(subCategories.value);
-			
+
 		}
 		return {
 			categories,

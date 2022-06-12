@@ -12,7 +12,8 @@ import { defineComponent, onMounted, computed } from 'vue'
 import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { Toast } from 'vant';
-import { UserAddress, BaseResponseType } from "@src/models";
+import { UserAddress } from "@src/models/User";
+import { BaseResponseType } from "@src/models/common";
 import { queryUserAddress } from '@src/api/user'
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'

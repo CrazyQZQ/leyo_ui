@@ -7,9 +7,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { reactive, toRefs, ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { Toast } from "vant";
 
 export default {
   name: 'ShoppingCart',
@@ -46,13 +47,11 @@ export default {
     ];
 
     const onAdd = () => Toast('新增地址');
-    const onEdit = (item, index) => Toast('编辑地址:' + index);
 
     return {
       goBack,
       list,
       onAdd,
-      onEdit,
       disabledList,
       chosenAddressId,
     };

@@ -1,4 +1,3 @@
-import { User } from '@src/models'
 import { IGlobalState } from './index'
 
 const getters = {
