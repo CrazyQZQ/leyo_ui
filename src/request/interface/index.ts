@@ -1,7 +1,7 @@
 import axios from 'axios'
 import type { AxiosResponse, AxiosInstance } from 'axios'
 import type { RequestInterceptors, RequestConfig, BasicException } from './type'
-import { BaseResponseType } from "@src/models";
+import { BaseResponseType } from "@src/models/common";
 import { Toast,Dialog } from 'vant'
 import router from '@src/router'
 import store from '@src/store'
@@ -134,7 +134,7 @@ class configrequest {
           if (config.interceptors?.responseInterceptor) {
             res = config.interceptors.responseInterceptor(res)
           }
-          const data = (res as any) as BaseResponseType
+          const data = (res as any) as BaseResponseType<T>
           if(data.code === 200){
             resolve(res)
           }else if(data.code === 1004){

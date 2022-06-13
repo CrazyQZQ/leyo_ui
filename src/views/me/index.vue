@@ -4,7 +4,7 @@
     <div class="w-full h-50 p-4">
       <div class="grid grid-rows-3 grid-cols-4 grid-flow-col gap-2">
         <div class="row-span-3 w-24">
-          <van-image round width="5rem" height="5rem" :src="userInfo.avatar"/>
+          <van-image round width="5rem" height="5rem" :src="userInfo.avatar" />
         </div>
         <div class="col-span-3 font-bold">{{ userInfo.nickName }}</div>
         <div class="col-span-3 text-gray-400">登录名：{{ userInfo.userName }}</div>
@@ -17,8 +17,9 @@
           <span class="font-black">我的订单</span>
           <span class="absolute right-0 text-xs" @click="$router.push('/order?status=')">全部 ></span>
         </div>
-        <div class="row-span-2 text-center" v-for="(item, index) in orders" :key="index" @click="$router.push('/order?status='+item.status)">
-          <van-icon :name="item.icon" size="1.5rem" :badge="item.count"/>
+        <div class="row-span-2 text-center" v-for="(item, index) in orders" :key="index"
+          @click="$router.push('/order?status=' + item.status)">
+          <van-icon :name="item.icon" size="1.5rem" :badge="item.count" />
           <span class="block text-xs">{{ item.title }}</span>
         </div>
       </div>
@@ -54,11 +55,12 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, onMounted, ref, computed} from 'vue'
-import {useStore} from 'vuex'
-import {useRouter} from 'vue-router'
-import {IGlobalState} from '@src/store'
-import { getStatusCount } from '@src/api/order.ts'
+import { defineComponent, onMounted, ref, computed } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+import { IGlobalState } from '@src/store'
+import { getStatusCount } from '@src/api/order'
+import { BaseResponseType } from "@src/models/common";
 
 export default defineComponent({
   name: 'me',
@@ -105,9 +107,9 @@ export default defineComponent({
     ])
 
     onMounted(async () => {
-      const res = await getStatusCount({userId: store.state.auth.userInfo.userId})
+      const res = await getStatusCount({ userId: store.state.auth.userInfo.userId }) as BaseResponseType<object>
       if (res.code === 200) {
-        res.data.forEach(item => {
+        res.data.forEach((item: { status: number; count: number }) => {
           const index = orders.value.findIndex(i => i.status === item.status)
           if (index !== -1) {
             orders.value[index].count = item.count
@@ -120,7 +122,7 @@ export default defineComponent({
     }
 
     const goTo = (r: string, query: any) => {
-      router.push({path: r, query: query || {}})
+      router.push({ path: r, query: query || {} })
     }
     return {
       userInfo,

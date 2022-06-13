@@ -6,8 +6,8 @@
 
 			<Head title="首页" :back="false">
 				<template v-slot:header-action>
-<!--					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />-->
-          <van-icon name="chat-o" dot size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
+					<!--					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />-->
+					<van-icon name="chat-o" dot size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
 				</template>
 			</Head>
 			<!-- search-input -->
@@ -15,7 +15,7 @@
 			<!-- content -->
 			<div class="w-11/12 mt-2">
 				<Swiper :list="banners"></Swiper>
-        <van-notice-bar left-icon="volume-o" :text="announcement" />
+				<van-notice-bar left-icon="volume-o" :text="announcement" />
 				<Category :list="cateGoryList"></Category>
 				<Brand :list="brands"></Brand>
 				<HotSale></HotSale>
@@ -60,22 +60,22 @@ export default defineComponent({
 		let brands = ref([])
 		let announcement = ref('暂无公告')
 		onMounted(async () => {
-			await getBanners().then(res => {
-        console.log(res)
-        banners.value = res?.data.map((e: { imageUrl: any; }) => {
-          return {
-            imgUrl: e.imageUrl,
-            url: ''
-          }
-        })
-      })
+			let res: any = await getBanners()
+			if (res.code === 200) {
+				banners.value = res?.data.map((e: { imageUrl: any; }) => {
+					return {
+						imgUrl: e.imageUrl,
+						url: ''
+					}
+				})
+			}
 			let res2: any = await getAnnouncement()
 			announcement.value = res2.data
 
-			let res3: any = await typeList({parentId: 0})
+			let res3: any = await typeList({ parentId: 0 })
 			cateGoryList.value = res3.rows
 
-			let res4: any = await brandList({parentId: 0})
+			let res4: any = await brandList({ parentId: 0 })
 			brands.value = res4.rows
 		})
 

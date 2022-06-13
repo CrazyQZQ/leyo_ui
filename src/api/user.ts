@@ -1,13 +1,7 @@
 
 import request from "@src/request";
-import { UserAddress } from "@src/models";
+import { UserAddress } from "@src/models/User";
 
-// export function login(params: any) {
-//     request.post({
-//         url: '/system/client_login',
-//         data: params,
-//         headers: {'Content-Type': 'application/json'}
-//     })
 
 // }
 /**

@@ -1,4 +1,4 @@
-import { Order,OrderDetail } from '@src/models'
+import { Order,OrderDetail } from '@src/models/order'
 
 /**
  * 订单信息

@@ -22,13 +22,13 @@
 import { defineComponent, onMounted, ref ,Ref} from 'vue'
 import LineBLock from '@src/components/lineblock.vue'
 import { hotSales } from "@src/api/order";
-import { Sku } from "@src/models";
+import { Sku } from "@src/models/product";
 export default defineComponent({
 	components: {
 		'line-bLock': LineBLock
 	},
 	setup() {
-		let products: Ref<Product[]> = ref([])
+		let products: Ref<Sku[]> = ref([])
 		let pageNum = 1;
 		let pageSize = 10;
 
@@ -42,7 +42,7 @@ export default defineComponent({
 				pageNum,
 				pageSize
 			}
-			let res: any = await hotSales(params)
+			let res: any = await hotSales()
 			products.value = res.data as Sku[]
 		}
 		return {

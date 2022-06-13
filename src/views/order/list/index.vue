@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full">
+  <div class="me-container">
     <van-nav-bar title="我的订单" left-arrow @click-left="goBack"></van-nav-bar>
     <van-tabs @click="onChangeTab" :color="'#1baeae'" :title-active-color="'#1baeae'" v-model:active="orderStatus">
       <van-tab title="全部" name=''></van-tab>
@@ -10,30 +10,28 @@
       <van-tab title="退款/售后" name="4"></van-tab>
     </van-tabs>
     <div class="h-full w-full">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="w-full" style="height: 500px;overflow-y: auto;">
-        <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          finished-text="没有更多了"
-          offset="10"
-          @load="onLoad"
-          :immediate-check="false"
-          class="h-full w-full"
-        >
-          <div v-for="(item, index) in list" :key="index" class="shadow-md p-1 m-5 bg-white rounded-lg" @click="goTo(item.id)">
-            <div class="order-item-header">
-              <span>订单时间：{{ item.createTime }}</span>
-              <span>{{ item.addressName }}</span>
-            </div>
-            <van-card
-              v-for="one in item.orderDetailList"
-              :key="one.id"
-              :num="one.count"
-              :price="one.sku.price"
-              :desc="one.sku.typeName + ' ' + one.sku.brandName"
-              :title="one.productName"
-              :thumb="one.sku.imageUrl"
-            />
+      <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="w-full h-full" style="overflow-y: auto;">
+        <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" offset="90" @load="onLoad"
+          :immediate-check="false" class="w-full" style="height: 42.6rem;">
+          <div v-for="(item, index) in list" :key="index" class="shadow-md p-1 m-5 bg-white rounded-lg van-hairline--top"
+            @click="goTo(item.id)">
+            <van-row class="text-sm px-2">
+              <van-row>
+                <span class="font-bold">订单编号：</span>
+                <span class="text-red-500">{{ item.number }}</span>
+              </van-row>
+              <van-row>
+                <span class="font-bold">收货地址：</span>
+                <span class="text-gray-400">{{ item.addressName }}</span>
+              </van-row>
+            </van-row>
+            <van-card v-for="one in item.orderDetailList" :key="one.id" :num="one.count" :price="one.sku.price"
+              :desc="one.sku.typeName + ' ' + one.sku.brandName" :title="one.productName" :thumb="one.sku.imageUrl?one.sku.imageUrl:defaultErrorImage">
+              <template #footer>
+                <span class="font-bold">价格：</span>
+                <span class="text-red-500">￥{{ item.totalAmount }}</span>
+              </template>
+            </van-card>
           </div>
         </van-list>
       </van-pull-refresh>
@@ -43,10 +41,11 @@
 
 <script lang="ts">
 import { reactive, toRefs, onMounted } from 'vue';
-import { getOrderList } from '@src/api/order.ts'
-import { useRouter,useRoute } from 'vue-router';
+import { getOrderList } from '@src/api/order'
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
+import { defaultErrorImage } from "@src/common/common";
 
 export default {
   name: 'Order',
@@ -67,32 +66,33 @@ export default {
     })
 
     onMounted(() => {
-      state.orderStatus = route.query.status || ''
+      state.orderStatus = route.query.status
       loadData()
     })
 
-    const loadData = async () => {
-      if(state.finished){
+    const loadData = () => {
+      if (state.finished) {
         state.loading = false;
         return
       }
-      await getOrderList({ pageNum: state.page,pageSize:10, status: state.orderStatus, userId: store.state.auth.userInfo.userId })
-      .then(res => {
-        state.list = state.list.concat(res.rows)
-        state.total = res.total
-        if(state.list.length >= state.total) {
-          state.finished = true;
-        }
-      })
-      state.loading = false;
+      getOrderList({ pageNum: state.page, pageSize: 10, status: state.orderStatus, userId: store.state.auth.userInfo.userId })
+        .then(res => {
+          state.list = state.list.concat(res.rows)
+          state.total = res.total
+          state.loading = false;
+          if (state.list.length >= state.total) {
+            state.finished = true;
+          }
+        })
+
     }
 
-    const onChangeTab = (name) => {
+    const onChangeTab = (name: string) => {
       state.orderStatus = name
       onRefresh()
     }
 
-    const goTo = (id) => {
+    const goTo = (id: number) => {
       router.push({ path: '/orderDetail', query: { id } })
     }
 
@@ -101,23 +101,20 @@ export default {
     }
 
     const onLoad = () => {
-      console.log('onload')
       if (state.refreshing) {
-        state.list = [];
+        state.list.length = 0
+        state.page = 1
         state.refreshing = false;
-      }
-      if (!state.refreshing && state.list.length < state.total) {
+      } else if (state.list.length < state.total) {
         state.page = state.page + 1
       }
       loadData()
     }
 
     const onRefresh = () => {
-      console.log('onRefresh')
       state.refreshing = true
       state.finished = false
       state.loading = true
-      state.page = 1
       onLoad()
     }
 
@@ -127,7 +124,8 @@ export default {
       goTo,
       goBack,
       onLoad,
-      onRefresh
+      onRefresh,
+      defaultErrorImage
     }
   }
 }
