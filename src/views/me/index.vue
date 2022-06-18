@@ -1,7 +1,8 @@
 <template>
-  <div class="relative bg-gray-100" style="height: calc(100vh - 3.15rem);">
+  <div class="relative bg-gray-100" style="height: calc(100vh - 3.15rem); overflow-y: auto">
     <!--    <div class="h-40 w-full bg-purple-500 rounded-b-6xl"></div>-->
-    <div class="w-full h-50 p-4">
+<!--    用户信息-->
+    <div class="relative w-full h-50 p-4">
       <div class="grid grid-rows-3 grid-cols-4 grid-flow-col gap-2">
         <div class="row-span-3 w-24">
           <van-image round width="5rem" height="5rem" :src="userInfo.avatar" />
@@ -10,9 +11,33 @@
         <div class="col-span-3 text-gray-400">登录名：{{ userInfo.userName }}</div>
         <div class="col-span-3">手机号：{{ userInfo.phoneNumber }}</div>
       </div>
+      <!--    设置-->
+      <div class="absolute top-3.5 right-3.5">
+        <van-icon name="setting-o" size="1.5rem"/>
+      </div>
     </div>
     <section class="w-full justify-center px-4">
-      <div class="grid grid-cols-3 grid-cols-5 gap-2 bg-white rounded-lg h-50 p-2">
+<!--      收藏-->
+      <div class="grid grid-cols-3 grid-cols-4 gap-2 bg-white rounded-lg h-50 p-2 mb-3">
+        <div class="row-span-2 text-center">
+          <van-icon name="star-o" size="1.5rem"/>
+          <span class="block text-xs">收藏</span>
+        </div>
+        <div class="row-span-2 text-center">
+          <van-icon name="certificate" size="1.5rem"/>
+          <span class="block text-xs">订阅</span>
+        </div>
+        <div class="row-span-2 text-center">
+          <van-icon name="underway-o" size="1.5rem"/>
+          <span class="block text-xs">足迹</span>
+        </div>
+        <div class="row-span-2 text-center">
+          <van-icon name="balance-pay" size="1.5rem"/>
+          <span class="block text-xs">零钱</span>
+        </div>
+      </div>
+<!--      订单-->
+      <div class="grid grid-rows-3 grid-cols-5 gap-2 bg-white rounded-lg h-50 p-2 mb-3">
         <div class="relative col-span-5">
           <span class="font-black">我的订单</span>
           <span class="absolute right-0 text-xs" @click="$router.push('/order?status=')">全部 ></span>
@@ -23,8 +48,10 @@
           <span class="block text-xs">{{ item.title }}</span>
         </div>
       </div>
-
     </section>
+    <div class="px-2 mb-3">
+      <ProductList title="为您推荐"></ProductList>
+    </div>
     <!--    <section class="w-full flex justify-center px-4 -mt-16">-->
     <!--      &lt;!&ndash;      我的订单&ndash;&gt;-->
     <!--      <div class="rounded-lg bg-white h10">-->
@@ -61,10 +88,13 @@ import { useRouter } from 'vue-router'
 import { IGlobalState } from '@src/store'
 import { getStatusCount } from '@src/api/order'
 import { BaseResponseType } from "@src/models/common";
+import ProductList from '@src/components/ProductList.vue'
 
 export default defineComponent({
   name: 'me',
-
+  components: {
+    ProductList
+  },
   setup() {
     const loading = false
     const router = useRouter()

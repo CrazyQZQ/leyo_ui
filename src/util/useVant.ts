@@ -37,7 +37,9 @@ import {
 	NoticeBar,
 	List,
 	Cell,
-	CellGroup
+	CellGroup,
+	DropdownMenu,
+	DropdownItem
 	// Toast
 } from 'vant'
 
@@ -80,5 +82,7 @@ export function useVant(app: App<Element>) {
 	app.use(List)
 	app.use(Cell)
 	app.use(CellGroup)
+	app.use(DropdownMenu)
+	app.use(DropdownItem)
 	return app
 }

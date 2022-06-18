@@ -83,7 +83,7 @@ import { Toast } from 'vant';
 import { useToggle } from '@vant/use'
 import { productInfo } from "@src/api/product";
 import { Product } from "@src/models/product";
-import sku from '@components/sku.vue';
+import sku from '@components/Sku.vue';
 export default defineComponent({
 	name: 'ProductDetail',
 	components: {

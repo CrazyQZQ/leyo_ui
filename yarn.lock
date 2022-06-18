@@ -748,18 +748,18 @@
   "resolved" "https://registry.npmmirror.com/@vue/web-component-wrapper/-/web-component-wrapper-1.3.0.tgz"
   "version" "1.3.0"
 
-"@vueuse/core@^4.11.0":
-  "integrity" "sha1-GreShN/+iTRCChpASRMzzQWR7NI="
-  "resolved" "https://registry.nlark.com/@vueuse/core/download/@vueuse/core-4.11.1.tgz"
-  "version" "4.11.1"
+"@vueuse/core@5.3":
+  "integrity" "sha512-bBL1/JMRHFWmbgQzUZHF4WOwlqfenR1B8+elriXsbnHlogQM5foSz9++WyDBR0YPIVgCJq7fvNLqd4T7+cjc5w=="
+  "resolved" "https://registry.npmjs.org/@vueuse/core/-/core-5.3.0.tgz"
+  "version" "5.3.0"
   dependencies:
-    "@vueuse/shared" "4.11.1"
+    "@vueuse/shared" "5.3.0"
     "vue-demi" "*"
 
-"@vueuse/shared@4.11.1":
-  "integrity" "sha1-yPVzWDllm/CgNlW99wqzN7jw1FI="
-  "resolved" "https://registry.nlark.com/@vueuse/shared/download/@vueuse/shared-4.11.1.tgz"
-  "version" "4.11.1"
+"@vueuse/shared@5.3.0":
+  "integrity" "sha512-qZfkPFH0qTScFpYiPOFpTcxWriRhlM3bgSzl3DFTgr/U0eZg3w2EFWaRZHdWeSvAUdNQyjOC4Toa8S0zJyEjHw=="
+  "resolved" "https://registry.npmjs.org/@vueuse/shared/-/shared-5.3.0.tgz"
+  "version" "5.3.0"
   dependencies:
     "vue-demi" "*"
 
@@ -9015,9 +9015,9 @@
   "version" "1.1.2"
 
 "vue-demi@*":
-  "integrity" "sha1-Jdbh69TUAQdX/zVx4r9qHXvz3oI="
-  "resolved" "https://registry.nlark.com/vue-demi/download/vue-demi-0.9.1.tgz?cache=0&sync_timestamp=1622101043497&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fvue-demi%2Fdownload%2Fvue-demi-0.9.1.tgz"
-  "version" "0.9.1"
+  "integrity" "sha512-xmkJ56koG3ptpLnpgmIzk9/4nFf4CqduSJbUM0OdPoU87NwRuZ6x49OLhjSa/fC15fV+5CbEnrxU4oyE022svg=="
+  "resolved" "https://registry.npmjs.org/vue-demi/-/vue-demi-0.13.1.tgz"
+  "version" "0.13.1"
 
 "vue-hot-reload-api@^2.3.0":
   "integrity" "sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog=="
@@ -9071,7 +9071,7 @@
   dependencies:
     "unzipper" "0.10.11"
 
-"vue@^2.6.0 || >=3.0.0-rc.1", "vue@^3.0.0", "vue@^3.0.2", "vue@^3.0.5", "vue@3.0.11":
+"vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.2", "vue@^3.0.5", "vue@3.0.11":
   "integrity" "sha1-yC+VlMv03MhpJB1MjdPgjZqPS18="
   "resolved" "https://registry.nlark.com/vue/download/vue-3.0.11.tgz"
   "version" "3.0.11"

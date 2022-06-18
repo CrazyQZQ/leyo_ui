@@ -1,270 +1,141 @@
-<!--
- * 严肃声明：
- * 开源版本请务必保留此注释头信息，若删除我方将保留所有法律责任追究！
- * 本系统已申请软件著作权，受国家版权局知识产权以及国家计算机软件著作权保护！
- * 可正常分享和学习源码，不得用于违法犯罪活动，违者必究！
- * Copyright (c) 2020 陈尼克 all rights reserved.
- * 版权所有，侵权必究！
- *
--->
-
 <template>
-  <div class="product-list-wrap">
-    <div class="product-list-content">
-      <header class="category-header wrap">
-        <i class="nbicon nbfanhui" @click="goBack"></i>
-        <div class="header-search">
-          <i class="nbicon nbSearch"></i>
-          <input
-            type="text"
-            class="search-title"
-            v-model="keyword"/>
+  <div class="bg-gray-100 dark:bg-gray-800 flex flex-col items-center">
+    <!--    搜索框-->
+    <div class="w-full">
+      <form action="/">
+        <van-search v-model="keyword" show-action placeholder="请输入搜索关键词" @click-input="clickInput"
+                    @search="onSearch" @cancel="onCancel" @keyup.enter="onSearch(keyword)"/>
+      </form>
+    </div>
+    <transition name="van-slide-left">
+      <section class="search-body w-full px-2.5 border-black" v-show="showHistory === '1'">
+        <!--      搜索历史-->
+        <div class="van-hairline--bottom pb-1.5 relative">
+          <div class="relative w-full h-7">
+            <span class="font-bold">历史搜索</span>
+            <span class="absolute top-px right-px">
+            <van-icon name="delete-o" @click="closeTag = !closeTag"/>
+          </span>
+          </div>
+          <div class="van-multi-ellipsis--l2">
+            <van-tag class="mr-2" size="medium" round color="#e5e7eb" text-color="black" :closeable="closeTag"
+                     v-for="(item,index) in searchHistory" :key="index" @click="clickTag(item)"
+                     @close="deleteHistory(index)">{{ item }}
+            </van-tag>
+          </div>
         </div>
-        <span class="search-btn" @click="getSearch">搜索</span>
-      </header>
-      <van-tabs type="card" color="#1baeae" @click="changeTab" >
-        <van-tab title="推荐" name=""></van-tab>
-        <van-tab title="新品" name="new"></van-tab>
-        <van-tab title="价格" name="price"></van-tab>
-      </van-tabs>
-    </div>
-    <div class="content">
-      <van-pull-refresh v-model="refreshing" @refresh="onRefresh" class="product-list-refresh">
-        <van-list
-          v-model:loading="loading"
-          :finished="finished"
-          :finished-text="productList.length ? '没有更多了' : '搜索想要的商品'"
-          @load="onLoad"
-          @offset="10"
-        >
-          <!-- <p v-for="item in list" :key="item">{{ item }}</p> -->
-          <template v-if="productList.length">
-            <div class="product-item" v-for="(item, index) in productList" :key="index" @click="productDetail(item)">
-              <img :src="$filters.prefix(item.goodsCoverImg)" />
-              <div class="product-info">
-                <p class="name">{{item.goodsName}}</p>
-                <p class="subtitle">{{item.goodsIntro}}</p>
-                <span class="price">￥ {{item.sellingPrice}}</span>
-              </div>
-            </div>
-          </template>
-          <img class="empty" v-else src="https://s.yezgea02.com/1604041313083/kesrtd.png" alt="搜索">
-        </van-list>
-      </van-pull-refresh>
-    </div>
+      </section>
+    </transition>
+    <transition name="van-slide-left">
+      <section class="w-full" v-show="showHistory === '0'">
+        <!--      搜索条件-->
+        <div class="w-full">
+          <van-dropdown-menu>
+            <van-dropdown-item v-model="priceSort" :options="sortOptions" @change="changeSort()">
+              <template #title>
+                <span>价格</span>
+                <van-icon v-show="priceSort === 'asc'" color="#ad0000" name="ascending" />
+                <van-icon v-show="priceSort === 'desc'" color="#ad0000" name="descending" />
+              </template>
+            </van-dropdown-item>
+            <van-dropdown-item v-model="saleSort" :options="sortOptions" @change="changeSort()">
+              <template #title>
+                <span>销量</span>
+                <van-icon v-show="saleSort === 'asc'" color="#ad0000" name="ascending" />
+                <van-icon v-show="saleSort === 'desc'" color="#ad0000" name="descending" />
+              </template>
+            </van-dropdown-item>
+          </van-dropdown-menu>
+        </div>
+        <!--      搜索结果-->
+        <div class="w-full px-2.5">
+          <ProductList title="搜索结果"></ProductList>
+        </div>
+      </section>
+    </transition>
   </div>
 </template>
 
-<script>
-import { reactive, toRefs } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { search } from '@/service/good'
+<script lang="ts">
+import {defineComponent, ref, reactive, toRefs, computed} from 'vue'
+import {useRouter, useRoute} from 'vue-router';
+import {IGlobalState} from '@src/store'
+import {useStore} from 'vuex'
+import * as Types from '@src/store/modules/cache/types'
+import ProductList from '@src/components/ProductList.vue'
+import {Toast} from 'vant'
+
 export default {
+  name: 'SubmitOrder',
+  components: {
+    ProductList
+  },
   setup() {
-    const route = useRoute()
+    const target = ref(null)
+    const store = useStore<IGlobalState>()
     const router = useRouter()
-    const state = reactive({
-      keyword: route.query.keyword || '',
-      searchBtn: false,
-      seclectActive: false,
-      refreshing: false,
-      list: [],
-      loading: false,
-      finished: false,
-      productList: [],
-      totalPage: 0,
-      page: 1,
-      orderBy: ''
+    const route = useRoute()
+    let showHistory = ref(route.query.shouHistory || '0')
+    const keyword = ref('')
+    const closeTag = ref(false)
+    const searchParams = reactive({
+      priceSort: '',
+      saleSort: '',
+      brands: [],
+      categories: [],
+      keyword: '',
+    })
+    const sortOptions = ref([{text:'默认排序',value:''},{text:'从低到高',value:'asc'},{text:'从高到低',value:'desc'}])
+    const searchHistory = computed(() => {
+      return store.state.cacheInfo.searchHistory
     })
 
-    // onMounted(() => {
-    //   init()
-    // })
-
-    const init = async () => {
-      const { categoryId } = route.query
-      if (!categoryId && !state.keyword) {
-        // Toast.fail('请输入关键词')
-        state.finished = true
-        state.loading = false;
-        return
+    const onSearch = (value: string) => {
+      if (value) {
+        store.dispatch(`cacheInfo/${Types.ADD_SEARCH_HISTORY}`, value)
+        showHistory.value = '0'
+      } else {
+        Toast.fail('请输入搜索关键词')
       }
-      const { data, data: { list } } = await search({ pageNumber: state.page, goodsCategoryId: categoryId, keyword: state.keyword, orderBy: state.orderBy })
-      
-      state.productList = state.productList.concat(list)
-      state.totalPage = data.totalPage
-      state.loading = false;
-      if (state.page >= data.totalPage) state.finished = true
     }
 
-    const goBack = () => {
-      router.go(-1)
+    const onCancel = () => {
+      showHistory.value = '0'
     }
 
-    const productDetail = (item) => {
-      router.push({ path: `/product/${item.goodsId}` })
+    const clickInput = () => {
+      showHistory.value = '1'
     }
 
-    const getSearch = () => {
-      onRefresh()
-    }
-
-    const onLoad = () => {
-      if (!state.refreshing && state.page < state.totalPage) {
-        state.page = state.page + 1
+    const clickTag = (value: string) => {
+      if (!closeTag.value) {
+        keyword.value = value
+        onSearch(value)
       }
-      if (state.refreshing) {
-        state.productList = [];
-        state.refreshing = false;
-      }
-      init()
     }
 
-    const onRefresh = () => {
-      state.refreshing = true
-      state.finished = false
-      state.loading = true
-      state.page = 1
-      onLoad()
+
+    const deleteHistory = (index: number) => {
+      store.dispatch(`cacheInfo/${Types.DELETE_SEARCH_HISTORY}`, index)
     }
 
-    const changeTab = (name) => {
-      console.log('name', name)
-      state.orderBy = name
-      onRefresh()
+    const changeSort = () => {
+      console.log(searchParams)
     }
-
     return {
-      ...toRefs(state),
-      goBack,
-      productDetail,
-      getSearch,
-      changeTab,
-      onLoad,
-      onRefresh
-    }
+      onSearch,
+      onCancel,
+      keyword,
+      showHistory,
+      clickInput,
+      searchHistory,
+      deleteHistory,
+      closeTag,
+      clickTag,
+      ...toRefs(searchParams),
+      sortOptions,
+      changeSort,
+    };
   }
 }
 </script>
-
-<style lang="less" scoped>
-  @import '../common/style/mixin';
-  .product-list-content {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: 1000;
-    background: #fff;
-    .category-header {
-      .fj();
-      width: 100%;
-      height: 50px;
-      line-height: 50px;
-      padding: 0 15px;
-      .boxSizing();
-      font-size: 15px;
-      color: #656771;
-      z-index: 10000;
-      &.active {
-        background: @primary;
-      }
-      .icon-left {
-        font-size: 25px;
-        font-weight: bold;
-      }
-      .header-search {
-        display: flex;
-        width: 76%;
-        height: 20px;
-        line-height: 20px;
-        margin: 10px 0;
-        padding: 5px 0;
-        color: #232326;
-        background: #F7F7F7;
-        .borderRadius(20px);
-        .nbSearch {
-          padding: 0 5px 0 20px;
-          font-size: 17px;
-        }
-        .search-title {
-          font-size: 12px;
-          color: #666;
-          background: #F7F7F7;
-        }
-    }
-    .icon-More {
-      font-size: 20px;
-    }
-    .search-btn {
-      height: 28px;
-      margin: 8px 0;
-      line-height: 28px;
-      padding: 0 5px;
-      color: #fff;
-      background: @primary;
-      .borderRadius(5px);
-      margin-top: 10px;
-    }
-  }
-}
-  .content {
-    height: calc(~"(100vh - 70px)");
-    overflow: hidden;
-    overflow-y: scroll; 
-    margin-top: 78px;
-  }
-  .product-list-refresh {
-    .product-item {
-      .fj();
-      width: 100%;
-      height: 120px;
-      padding: 10px 0;
-      border-bottom: 1px solid #dcdcdc;
-      img {
-        width: 140px;
-        height: 120px;
-        padding: 0 10px;
-        .boxSizing();
-      }
-      .product-info {
-          width: 56%;
-          height: 120px;
-          padding: 5px;
-          text-align: left;
-          .boxSizing();
-          p {
-            margin: 0
-          }
-          .name {
-            width: 100%;
-            max-height: 40px;
-            line-height: 20px;
-            font-size: 15px;
-            color: #333;
-            overflow: hidden;
-            text-overflow:ellipsis;
-            white-space: nowrap;
-          }
-          .subtitle {
-            width: 100%;
-            max-height: 20px;
-            padding: 10px 0;
-            line-height: 25px;
-            font-size: 13px;
-            color: #999;
-            overflow: hidden;
-          }
-          .price {
-            color: @primary;
-            font-size: 16px;
-          }
-      }
-  }
-  .empty {
-    display: block;
-    width: 150px;
-    margin: 50px auto 20px;
-  }
-}
-</style>

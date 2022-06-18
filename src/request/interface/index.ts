@@ -1,10 +1,11 @@
 import axios from 'axios'
 import type { AxiosResponse, AxiosInstance } from 'axios'
-import type { RequestInterceptors, RequestConfig, BasicException } from './type'
+import type { RequestInterceptors, RequestConfig } from './type'
 import { BaseResponseType } from "@src/models/common";
 import { Toast,Dialog } from 'vant'
 import router from '@src/router'
 import store from '@src/store'
+import { BasicException } from '@src/common/common'
 
 class configrequest {
   instance: AxiosInstance
@@ -56,10 +57,9 @@ class configrequest {
         Toast.clear()
         const res = response.data
         if (res.code !== 200) {
-          Toast.fail(res.msg)
           // 若后台返回错误值，此处返回对应错误对象，下面 error 就会接收
-          // return Promise.reject(new BasicException(res.code, res.msg || 'Error'))
-          return Promise.reject(new Error(res.code || '500'))
+          return Promise.reject(new BasicException(res.code, res.msg || 'Error'))
+          // return Promise.reject(new Error(res.code || '500'))
         } else {
           // 注意返回值
           return response.data
@@ -149,18 +149,11 @@ class configrequest {
         })
         // 如果有错误返回错误
         .catch((err) => {
-          router.push({ path: '/login' })
-          // if(err.)
-          // reject(err)
-          // if(data.code === 1004){
-          //   console.log(res)
-          //   Toast.fail("用户未登录！")
-          //   resolve(err)
-          //   router.push({ path: '/login' })
-          // }else {
-          //   // Toast.fail(data.msg)
-          //   resolve(err)
-          // }
+          if(err.getCode() === 1004){
+            router.push({ path: '/login' })
+          }else{
+            Toast.fail(err.getMsg())
+          }
           return err
         })
     })

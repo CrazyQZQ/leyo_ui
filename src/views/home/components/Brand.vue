@@ -1,6 +1,6 @@
 <template>
-  <div class="w-full h-32 mt-3 rounded-md bg-white wrapper whitespace-nowrap relative overflow-hidden">
-		<line-block>品牌特购</line-block>
+  <line-block>品牌特购</line-block>
+  <div class="w-full h-32 rounded-md bg-white wrapper whitespace-nowrap relative overflow-hidden">
     <div class="scroll-content inline-block pt-1">
       <div class="scroll-item inline-block " v-for="(item, index) in list" :key="index">
         <div class="flex flex-col justify-center items-center mx-3">

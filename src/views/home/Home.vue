@@ -2,28 +2,24 @@
 	<div>
 		<div v-if="isFetching">loading...</div>
 		<div v-else class="bg-gray-100 dark:bg-gray-800 flex flex-col items-center">
-			<!-- header -->
-
 			<Head title="首页" :back="false">
 				<template v-slot:header-action>
-					<!--					<van-icon name="cart-o" size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />-->
 					<van-icon name="chat-o" dot size="26" :color="isDark ? '#F9FAFB' : '#1F2937'" />
 				</template>
 			</Head>
 			<!-- search-input -->
-			<Search @keywordChange="keyWordChange" :onClick="toSearch"></Search>
+      <div @click="$router.push('/goodsList?shouHistory=1')">
+        <Search @keywordChange="keyWordChange"></Search>
+      </div>
 			<!-- content -->
 			<div class="w-11/12 mt-2">
 				<Swiper :list="banners"></Swiper>
 				<van-notice-bar left-icon="volume-o" :text="announcement" />
 				<Category :list="cateGoryList"></Category>
 				<Brand :list="brands"></Brand>
-				<HotSale></HotSale>
+				<ProductList title="热卖商品"></ProductList>
 			</div>
-
-			<!-- footer-table -->
 		</div>
-		<!-- <van-number-keyboard safe-area-inset-bottom /> -->
 	</div>
 </template>
 
@@ -34,11 +30,12 @@ import { useDark } from '@vueuse/core'
 import Head from '@components/Head.vue'
 import Search from '@components/Search.vue'
 import Swiper from '@src/components/Swiper.vue'
+import ProductList from '@src/components/ProductList.vue'
 import Category from './components/Category.vue'
 import Brand from './components/Brand.vue'
-import HotSale from './components/HotSale.vue'
 import { getBanners, getAnnouncement } from '@src/api/home'
 import { typeList, brandList } from '@src/api/product'
+
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -47,7 +44,7 @@ export default defineComponent({
 		Swiper,
 		Category,
 		Brand,
-		HotSale
+    ProductList
 	},
 	setup() {
 		let bscroll = null
@@ -85,6 +82,7 @@ export default defineComponent({
 
 		const toSearch = () => {
 			console.log('去搜索页')
+      // $router.push('/goodsList?shouHistory=1')
 		}
 
 		return {
