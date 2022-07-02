@@ -13,20 +13,15 @@
 </template>
 
 <script lang="ts">
-import { NameWithIcon } from '@src/store/home'
 import { defineComponent, PropType, toRef } from 'vue'
+import { ProductType } from '@src/models/product'
 
 export default defineComponent({
 	name: 'Category',
 	props: {
-		list: Array as PropType<Array<NameWithIcon>>
+		list: Array as PropType<ProductType[]>
 	},
 	setup(props) {
-		let list = toRef(props, 'list')
-		console.log(list.value)
-		list.value?.forEach((item) => {
-			console.log(item.name)
-		})
 		const toSearch = (keyword: string) => {
 			console.log(keyword)
 		}

@@ -42,6 +42,7 @@
 <script lang="ts">
 import { reactive, toRefs, onMounted } from 'vue';
 import { getOrderList } from '@src/api/order'
+import { Order,OrderDetail } from '@src/models/order'
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
@@ -60,7 +61,7 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      list: [],
+      list: Array<Order>[],
       page: 1,
       total: 0
     })

@@ -2,7 +2,7 @@
 <template>
   <line-bLock>{{ title }}</line-bLock>
   <!--	<div class="rounded-lg bg-white">-->
-  <div class="grid grid-cols-2 gap-2 p-2">
+  <div class="grid grid-cols-2 gap-2 p-2 h-96">
     <div v-for="(item) in products" :key="item.id" class="h-53 w-full bg-white rounded-lg"
          @click="$router.push('/goodsDetail?id='+item.productId)">
       <div class="h-36">
@@ -73,8 +73,10 @@ export default defineComponent({
         ([{isIntersecting}], observerElement) => {
           // 如果元素可以，发送请求获取数据，并停止检测避免重复发送请求
           if (isIntersecting) {
-            Toast('isIntersecting元素可见性，发送请求获取数据')
+            // Toast('isIntersecting元素可见性，发送请求获取数据')
+            console.log('isIntersecting元素可见性，发送请求获取数据')
             products.value = products.value.concat(data.value)
+            console.log(products.value.length)
             stop()
           }
         }, {

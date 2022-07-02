@@ -14,8 +14,8 @@
         </van-col>
       </van-row>
       <van-list class="order-list">
-        <van-card v-for="(item, index) in orderInfo.orderDetailList" :num="item.count" :price="item.sku.price"
-          :desc="item.sku.typeName + '-' + item.sku.brandName" :title="item.sku.productName" :thumb="item.sku.imageUrl">
+        <van-card v-for="(item, index) in orderInfo.orderDetailList" :num="item.count" :price="item.sku?item.sku.price:''"
+          :desc="(item.sku?item.sku.typeName:'') + '-' + (item.sku?item.sku.brandName:'')" :title="item.sku?item.sku.productName:''" :thumb="item.sku?item.sku.imageUrl:''">
           <template #tags>
             <van-tag class="mr-1" v-for="attr in item.sku.skuAttributes" plain type="danger">{{ attr.value }}</van-tag>
           </template>

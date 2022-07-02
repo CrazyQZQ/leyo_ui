@@ -1,14 +1,17 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
+import store from '@src/store/index'
 
 const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/Login',
 		name: 'Login',
+		meta: { requiresAuth: false },
 		component: () => import('@src/views/login/Login.vue')
 	},
 	{
 		path: '/',
 		name: 'Home',
+		meta: { requiresAuth: true },
 		components: {
 			default: () => import('../views/home/Home.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
@@ -17,31 +20,35 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/goodsList',
 		name: 'GoodsList',
+		meta: { requiresAuth: true },
 		component: () => import('../views/goods/list/index.vue')
 	},
 	{
 		path: '/goodsDetail',
 		name: 'GoodsDetail',
+		meta: { requiresAuth: true },
 		component: () => import('../views/goods/detail/index.vue')
 	},
 	{
 		path: '/category',
-		name: 'category',
+		name: 'Category',
+		meta: { requiresAuth: true },
 		components: {
 			default: () => import('../views/category/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
 		}
 	},
 	{
-		path: '/search',
-		name: 'search',
+		path: '/setting',
+		name: 'Setting',
 		components: {
-			default: () => import('../views/search/index.vue')
+			default: () => import('../views/setting/index.vue')
 		}
 	},
 	{
 		path: '/order',
-		name: 'order',
+		name: 'Order',
+		meta: { requiresAuth: true },
 		components: {
 			default: () => import('../views/order/list/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
@@ -50,16 +57,19 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/orderDetail',
 		name: 'OrderDetail',
+		meta: { requiresAuth: true },
 		component: () => import('../views/order/detail/index.vue')
 	},
 	{
 		path: '/submitOrder',
 		name: 'SubmitOrder',
+		meta: { requiresAuth: true },
 		component: () => import('../views/order/submit/index.vue')
 	},
 	{
 		path: '/shoppingCart',
 		name: 'ShoppingCart',
+		meta: { requiresAuth: true },
 		components: {
 			default: () => import('../views/shoppingCart/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
@@ -67,7 +77,8 @@ const routes: Array<RouteRecordRaw> = [
 	},
 	{
 		path: '/me',
-		name: 'me',
+		name: 'Me',
+		meta: { requiresAuth: true },
 		components: {
 			default: () => import('../views/me/index.vue'),
 			Tabbar: () => import('../components/Tabbar.vue')
@@ -76,6 +87,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/address',
 		name: 'Address',
+		meta: { requiresAuth: true },
 		component: () => import('../views/address/index.vue')
 	},
 	{
@@ -86,6 +98,7 @@ const routes: Array<RouteRecordRaw> = [
 	{
 		path: '/messages',
 		name: 'Messages',
+		meta: { requiresAuth: true },
 		component: () => import('../views/messages/index.vue')
 	}
 ]
@@ -98,17 +111,13 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
 	// 1. 每个条件执行后都要跟上 next() 或 使用路由跳转 api 否则页面就会停留一动不动
 	// 2. 要合理的搭配条件语句，避免出现路由死循环。
-	// const token = localStorage.get('token')
-	// if (to.meta.auth) {
-	// 	if (!token) {
-	// 		return router.replace({
-	// 			name: 'login'
-	// 		})
-	// 	}
-	// 	next()
-	// } else {
-	// 	next()
-	// }
-	next()
+	const isAuth = store.state.auth.isAuth
+	console.log('isAuth', isAuth)
+	if (to.path === '/login')  next()
+	if (to.meta.requiresAuth && !isAuth) {
+		next('/login')
+	} else {
+		next()
+	}
 })
 export default router

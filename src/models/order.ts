@@ -13,10 +13,14 @@ export interface Order {
     updateBy?: string;
     updateTime?: string;
     remark?: string;
+    addressName?: string;
+    orderDetailList: OrderDetail[];
 }
 
 // 订单详情
 export interface OrderDetail {
+    skuId?: number;
+    masterId?: number;
     skuId?: number;
     count?: number;
     amount?: number;

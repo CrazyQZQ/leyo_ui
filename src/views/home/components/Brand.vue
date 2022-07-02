@@ -13,15 +13,15 @@
 </template>
 
 <script lang="ts">
-import { NameWithIcon } from '@src/store/home'
 import { defineComponent, onMounted, PropType, ref } from 'vue'
 import BScroll from '@better-scroll/core'
 import LineBLock from '@src/components/lineblock.vue'
+import { Brand } from '@src/models/product'
 
 export default defineComponent({
 	name: 'Brand',
 	props: {
-		list: Array as PropType<Array<NameWithIcon>>
+		list: Array as PropType<Brand[]>
 	},
 	components: {
 		'line-block': LineBLock

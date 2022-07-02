@@ -4,10 +4,10 @@
     <div class="cart-body">
       <van-swipe-cell stop-propagation v-for="(item, index) in cartItems" :key="index">
         <van-checkbox v-model="item.checked" checked-color="#b4282d"></van-checkbox>
-        <van-card :tag="item.sku.typeName" :price="item.sku.price" :desc="item.sku.typeName + '-' + item.sku.brandName"
-          :title="item.sku.productName" :thumb="item.sku.imageUrl" :origin-price="item.sku.originalPrice"
+        <van-card :tag="item.sku?item.sku.typeName:''" :price="item.sku?item.sku.price:''" :desc="(item.sku?item.sku.typeName:'') + '-' + (item.sku?item.sku.brandName:'')"
+          :title="item.sku?item.sku.productName:''" :thumb="item.sku?item.sku.imageUrl:''" :origin-price="item.sku?item.sku.originalPrice:''"
           class="goods-card">
-          <template #tags>
+          <template #tags v-if="item.sku">
             <van-tag plain type="danger" v-for="(addr, idx) in item.sku.skuAttributes" :key="idx">{{ addr.value }}
             </van-tag>
           </template>

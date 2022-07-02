@@ -7,7 +7,7 @@ const state: ICacheState = {
     searchHistory: [],
 }
 
-const cacheInfo: Module<IOrderState, IGlobalState> = {
+const cacheInfo: Module<ICacheState, IGlobalState> = {
     namespaced: true,
     state,
     mutations: {

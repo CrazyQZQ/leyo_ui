@@ -29,11 +29,11 @@ export default defineComponent({
 
     const animation = ref('');
     onBeforeRouteUpdate((to, form) => {
-      if (to.meta.index > form.meta.index) {
-        animation.value = 'slide-left'
-      } else {
-        animation.value = 'slide-right'
-      }
+      // if (to.meta.index > form.meta.index) {
+      //   animation.value = 'slide-left'
+      // } else {
+      //   animation.value = 'slide-right'
+      // }
     })
     return {
       isDark,

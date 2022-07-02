@@ -14,8 +14,7 @@ const state: IAuthState = {
     avatar: ''
   },
   token: {},
-  isAuth: false,
-  code: ''
+  isAuth: false
 }
 
 const login: Module<IAuthState, IGlobalState> = {
@@ -24,15 +23,23 @@ const login: Module<IAuthState, IGlobalState> = {
   mutations: {
     [Types.SAVE_USER_INFO](state, data) {
       state.userInfo = data
+      state.isAuth = true
     },
     [Types.SAVE_TOKEN](state, data) {
       state.token = data
     },
-    ['STE_ISAUTH'](state, data) {
-      state.isAuth = data
-    },
-    ['STE_CODE'](state, data) {
-      state.code = data
+    [Types.LOGOUT](state, data) {
+      state.userInfo = {
+        userId: 0,
+        userName: '',
+        nickName: '',
+        email: '',
+        phoneNumber: '',
+        sex: '',
+        avatar: ''
+      }
+      state.token = {}
+      state.isAuth = false
     }
   },
   actions: {
@@ -42,11 +49,8 @@ const login: Module<IAuthState, IGlobalState> = {
     async [Types.SAVE_TOKEN]({ commit }, data) {
       return commit(Types.SAVE_TOKEN, data)
     },
-    async ['STE_ISAUTH']({ commit }, data) {
-      return commit('STE_ISAUTH', data)
-    },
-    async ['STE_CODE']({ commit }, data) {
-      return commit('STE_CODE', data)
+    async [Types.LOGOUT]({ commit }, data) {
+      return commit(Types.LOGOUT, data)
     }
   }
 }

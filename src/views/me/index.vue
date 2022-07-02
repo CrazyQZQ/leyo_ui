@@ -13,7 +13,7 @@
       </div>
       <!--    设置-->
       <div class="absolute top-3.5 right-3.5">
-        <van-icon name="setting-o" size="1.5rem"/>
+        <van-icon name="setting-o" size="1.5rem" @click="$router.push('/setting')"/>
       </div>
     </div>
     <section class="w-full justify-center px-4">
