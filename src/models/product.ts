@@ -30,17 +30,17 @@ export interface ProductType {
     imageUrls?: string[];
 }
 
-interface Brand {
+export interface Brand {
     id?: number;
     parentId?: number;
-    name?: string;
+    name: string;
     typeId?: number;
     orderNum?: number;
     createBy?: string;
     createTime?: string;
     updateBy?: string;
     updateTime?: null;
-    imageUrls?: string[];
+    imageUrls: string[];
 }
 
 export interface Sku {
@@ -82,5 +82,5 @@ export interface ShoppingCartItem {
     num?: number;
     skuId?: number;
     userId?: number;
-    sku?: Sku;
+    sku: Sku;
 }

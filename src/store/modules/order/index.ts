@@ -4,7 +4,10 @@ import {IOrderState} from '@src/store/modules/order/interface'
 import * as Types from '@src/store/modules/order/types'
 
 const state: IOrderState = {
-    order: {},
+    order: {
+        totalAmount: 0,
+        orderDetailList: []
+    },
     orderDetailList: [],
     cartIds: [],
     accountId: 0

@@ -4,10 +4,11 @@
     <div class="cart-body">
       <van-swipe-cell stop-propagation v-for="(item, index) in cartItems" :key="index">
         <van-checkbox v-model="item.checked" checked-color="#b4282d"></van-checkbox>
-        <van-card :tag="item.sku?item.sku.typeName:''" :price="item.sku?item.sku.price:''" :desc="(item.sku?item.sku.typeName:'') + '-' + (item.sku?item.sku.brandName:'')"
-          :title="item.sku?item.sku.productName:''" :thumb="item.sku?item.sku.imageUrl:''" :origin-price="item.sku?item.sku.originalPrice:''"
-          class="goods-card">
-          <template #tags v-if="item.sku">
+        <van-card :tag="item.sku ? item.sku.typeName : ''" :price="item.sku ? item.sku.price : ''"
+          :desc="(item.sku ? item.sku.typeName : '') + '-' + (item.sku ? item.sku.brandName : '')"
+          :title="item.sku ? item.sku.productName : ''" :thumb="item.sku ? item.sku.imageUrl : ''"
+          :origin-price="item.sku ? item.sku.originalPrice : ''" class="goods-card">
+          <template #tags>
             <van-tag plain type="danger" v-for="(addr, idx) in item.sku.skuAttributes" :key="idx">{{ addr.value }}
             </van-tag>
           </template>
@@ -19,9 +20,9 @@
     </div>
     <van-submit-bar class="submit-bar" :price="totalPrice" button-text="提交订单" @submit="onSubmit">
       <van-checkbox v-model="selectAll" @click="click" checked-color="#b4282d">全选</van-checkbox>
-      <template #tip>
+      <!-- <template #tip>
         你的收货地址不支持配送, <span @click="onClickLink">修改地址</span>
-      </template>
+      </template> -->
     </van-submit-bar>
   </div>
 </template>
@@ -86,7 +87,8 @@ export default {
         if (item && item.sku && item.checked) {
           totalCount += item.num || 0
           orderDetailList.push({
-            skuId: item.skuId,
+            skuId: item.skuId || 0,
+            productName: '',
             count: item.num,
             amount: (item.sku.price || 0) * (item.num || 0),
             sku: { ...item.sku }
@@ -95,7 +97,7 @@ export default {
       })
       let orderInfo = {
         order: {
-          totalAmount: totalPrice.value/100,
+          totalAmount: totalPrice.value / 100,
           totalCount: totalCount
         },
         orderDetailList: orderDetailList,

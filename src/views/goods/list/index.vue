@@ -76,7 +76,6 @@ export default {
     const router = useRouter()
     const route = useRoute()
     let showHistory = ref(route.query.shouHistory || '0')
-    const keyword = ref('')
     const closeTag = ref(false)
     const searchParams = reactive({
       priceSort: '',
@@ -109,7 +108,7 @@ export default {
 
     const clickTag = (value: string) => {
       if (!closeTag.value) {
-        keyword.value = value
+        searchParams.keyword = value
         onSearch(value)
       }
     }
@@ -125,7 +124,6 @@ export default {
     return {
       onSearch,
       onCancel,
-      keyword,
       showHistory,
       clickInput,
       searchHistory,

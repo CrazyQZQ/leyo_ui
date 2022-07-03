@@ -46,7 +46,6 @@ export default defineComponent({
     let products: Ref<Sku[]> = ref([])
     let pageNum = 1;
     let pageSize = 10;
-    let data = ref([])
 
     onMounted(() => {
       getData()
@@ -59,10 +58,7 @@ export default defineComponent({
         pageSize
       }
       let res: any = await hotSales()
-      // products.value = res.data as Sku[]
-      data.value = res.data as Sku[]
-      products.value = products.value.concat(data.value)
-      products.value = products.value.concat(data.value)
+      products.value = products.value.concat(res.data as Sku[])
     }
 
     // stop             用于停止检测函数
@@ -75,8 +71,6 @@ export default defineComponent({
           if (isIntersecting) {
             // Toast('isIntersecting元素可见性，发送请求获取数据')
             console.log('isIntersecting元素可见性，发送请求获取数据')
-            products.value = products.value.concat(data.value)
-            console.log(products.value.length)
             stop()
           }
         }, {

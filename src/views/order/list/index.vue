@@ -14,22 +14,22 @@
         <van-list v-model:loading="loading" :finished="finished" finished-text="没有更多了" offset="90" @load="onLoad"
           :immediate-check="false" class="w-full" style="height: 42.6rem;">
           <div v-for="(item, index) in list" :key="index" class="shadow-md p-1 m-5 bg-white rounded-lg van-hairline--top"
-            @click="goTo(item.id)">
+            @click="goTo(item)">
             <van-row class="text-sm px-2">
               <van-row>
                 <span class="font-bold">订单编号：</span>
-                <span class="text-red-500">{{ item.number }}</span>
+                <span class="text-red-500">{{ item.number?item.number:'' }}</span>
               </van-row>
               <van-row>
                 <span class="font-bold">收货地址：</span>
-                <span class="text-gray-400">{{ item.addressName }}</span>
+                <span class="text-gray-400">{{ item.addressName?item.addressName:'' }}</span>
               </van-row>
             </van-row>
-            <van-card v-for="one in item.orderDetailList" :key="one.id" :num="one.count" :price="one.sku.price"
+            <van-card v-for="(one,idx) in item.orderDetailList" :key="idx" :num="one.count" :price="one.sku.price"
               :desc="one.sku.typeName + ' ' + one.sku.brandName" :title="one.productName" :thumb="one.sku.imageUrl?one.sku.imageUrl:defaultErrorImage">
               <template #footer>
                 <span class="font-bold">价格：</span>
-                <span class="text-red-500">￥{{ item.totalAmount }}</span>
+                <span class="text-red-500">￥{{ item.totalAmount?item.totalAmount:'' }}</span>
               </template>
             </van-card>
           </div>
@@ -47,6 +47,7 @@ import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
 import { defaultErrorImage } from "@src/common/common";
+import { BaseResponseType } from "@src/models/common";
 
 export default {
   name: 'Order',
@@ -61,13 +62,15 @@ export default {
       loading: false,
       finished: false,
       refreshing: false,
-      list: Array<Order>[],
+      list: Array<Order>(),
       page: 1,
       total: 0
     })
 
     onMounted(() => {
-      state.orderStatus = route.query.status
+      if(route.query.status) {
+        state.orderStatus = route.query.status as string
+      }
       loadData()
     })
 
@@ -78,8 +81,16 @@ export default {
       }
       getOrderList({ pageNum: state.page, pageSize: 10, status: state.orderStatus, userId: store.state.auth.userInfo.userId })
         .then(res => {
-          state.list = state.list.concat(res.rows)
-          state.total = res.total
+          if(res){
+            let o = res as BaseResponseType<Order>
+            let arr = o.rows as Order[]
+            arr.forEach(item => {
+              state.list.push(item)
+            })
+            state.list = state.list.concat(arr)
+            state.total = o.total || 0
+          }
+          
           state.loading = false;
           if (state.list.length >= state.total) {
             state.finished = true;
@@ -93,8 +104,11 @@ export default {
       onRefresh()
     }
 
-    const goTo = (id: number) => {
-      router.push({ path: '/orderDetail', query: { id } })
+    const goTo = (order: Order) => {
+      if(order && order.id){
+        const id: number = order.id
+        router.push({ path: '/orderDetail', query: { id } })
+      }
     }
 
     const goBack = () => {

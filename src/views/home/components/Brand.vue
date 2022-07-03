@@ -4,7 +4,7 @@
     <div class="scroll-content inline-block pt-1">
       <div class="scroll-item inline-block " v-for="(item, index) in list" :key="index">
         <div class="flex flex-col justify-center items-center mx-3">
-          <img :src="item.imageUrls?item.imageUrls[0]:''" :alt="item.name" class="w-16 h-16" @click="toCatory(item.name)" />
+          <img :src="item.imageUrls?item.imageUrls[0]:''" :alt="item.name" class="w-16 h-16" @click="toCatory(item)" />
           <p class="text-xs pt-1 font-light text-gray-700 dark:text-gray-50">{{ item.name }}</p>
         </div>
       </div>
@@ -44,8 +44,8 @@ export default defineComponent({
 			})
 		})
 
-		const toCatory = (keyword: string) => {
-			console.log(keyword)
+		const toCatory = (item: Brand) => {
+			console.log(item)
 		}
 
 		return {
