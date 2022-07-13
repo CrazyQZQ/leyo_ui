@@ -14,7 +14,8 @@
           <div class="relative w-full h-7">
             <span class="font-bold">历史搜索</span>
             <span class="absolute top-px right-px">
-            <van-icon name="delete-o" @click="closeTag = !closeTag"/>
+            <van-icon name="delete-o" v-show="!closeTag" @click="closeTag = true"/>
+            <van-icon name="passed" v-show="closeTag" @click="closeTag = false"/>
           </span>
           </div>
           <div class="van-multi-ellipsis--l2">
@@ -31,25 +32,25 @@
         <!--      搜索条件-->
         <div class="w-full">
           <van-dropdown-menu>
-            <van-dropdown-item v-model="priceSort" :options="sortOptions" @change="changeSort()">
+            <van-dropdown-item v-model="priceSort" :options="sortOptions" @change="changeSort('0')">
               <template #title>
                 <span>价格</span>
-                <van-icon v-show="priceSort === 'asc'" color="#ad0000" name="ascending" />
-                <van-icon v-show="priceSort === 'desc'" color="#ad0000" name="descending" />
+                <van-icon v-show="priceSort === 'Asc'" color="#ad0000" name="ascending" />
+                <van-icon v-show="priceSort === 'Desc'" color="#ad0000" name="descending" />
               </template>
             </van-dropdown-item>
-            <van-dropdown-item v-model="saleSort" :options="sortOptions" @change="changeSort()">
+            <van-dropdown-item v-model="saleSort" :options="sortOptions" @change="changeSort('1')">
               <template #title>
                 <span>销量</span>
-                <van-icon v-show="saleSort === 'asc'" color="#ad0000" name="ascending" />
-                <van-icon v-show="saleSort === 'desc'" color="#ad0000" name="descending" />
+                <van-icon v-show="saleSort === 'Asc'" color="#ad0000" name="ascending" />
+                <van-icon v-show="saleSort === 'Desc'" color="#ad0000" name="descending" />
               </template>
             </van-dropdown-item>
           </van-dropdown-menu>
         </div>
         <!--      搜索结果-->
         <div class="w-full px-2.5">
-          <ProductList title="搜索结果"></ProductList>
+          <ProductList title="搜索结果" :list="products"></ProductList>
         </div>
       </section>
     </transition>
@@ -57,12 +58,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, reactive, toRefs, computed} from 'vue'
+import {Ref, ref, reactive, toRefs, computed} from 'vue'
 import {useRouter, useRoute} from 'vue-router';
 import {IGlobalState} from '@src/store'
 import {useStore} from 'vuex'
 import * as Types from '@src/store/modules/cache/types'
 import ProductList from '@src/components/ProductList.vue'
+import { searchProduct } from "@src/api/product";
+import { SearchParams,SearchItem,BaseResponseType } from "@src/models/common";
+import { Sku } from "@src/models/product";
 import {Toast} from 'vant'
 
 export default {
@@ -77,22 +81,45 @@ export default {
     const route = useRoute()
     let showHistory = ref(route.query.shouHistory || '0')
     const closeTag = ref(false)
+    let products: Ref<Sku[]> = ref([])
     const searchParams = reactive({
-      priceSort: '',
-      saleSort: '',
+      priceSort: null,
+      saleSort: null,
       brands: [],
       categories: [],
       keyword: '',
+      sort: 'sales'
     })
-    const sortOptions = ref([{text:'默认排序',value:''},{text:'从低到高',value:'asc'},{text:'从高到低',value:'desc'}])
+    const sortOptions = ref([{text:'默认排序',value:''},{text:'从低到高',value:'Asc'},{text:'从高到低',value:'Desc'}])
     const searchHistory = computed(() => {
       return store.state.cacheInfo.searchHistory
     })
 
-    const onSearch = (value: string) => {
+    const onSearch = async (value: string) => {
       if (value) {
         store.dispatch(`cacheInfo/${Types.ADD_SEARCH_HISTORY}`, value)
         showHistory.value = '0'
+        let keywordSearchItem: SearchItem = {
+          field: "productName",
+          keyword: value,
+          queryType: "0"
+        }
+        let params:SearchParams = {
+          highlight: true,
+          highlightField: ['productName'],
+          indexName: 'sku',
+          queryVos: [keywordSearchItem],
+          page: 1,
+          rows: 100,
+          sortIndex: searchParams.sort,
+          sortOrder: searchParams.priceSort || searchParams.saleSort || 'Desc',
+        }
+        let res: any = await searchProduct(params)
+        if(res.data){
+          products.value = res.data.list as Sku[]
+        }else{
+          products.value = []
+        }
       } else {
         Toast.fail('请输入搜索关键词')
       }
@@ -118,8 +145,15 @@ export default {
       store.dispatch(`cacheInfo/${Types.DELETE_SEARCH_HISTORY}`, index)
     }
 
-    const changeSort = () => {
-      console.log(searchParams)
+    const changeSort = (flag:string) => {
+      if('0' === flag){
+        searchParams.saleSort = null
+        searchParams.sort = 'price'
+      }else{
+        searchParams.priceSort = null
+        searchParams.sort = 'sales'
+      }
+      onSearch(searchParams.keyword)
     }
     return {
       onSearch,
@@ -133,6 +167,7 @@ export default {
       ...toRefs(searchParams),
       sortOptions,
       changeSort,
+      products
     };
   }
 }

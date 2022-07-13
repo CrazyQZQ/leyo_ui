@@ -1,6 +1,6 @@
 
 import request from "@src/request";
-import { UserAddress } from "@src/models/User";
+import { UserAddress } from "@src/models/user";
 
 
 // }

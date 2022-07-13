@@ -16,7 +16,7 @@ import { defineComponent, onMounted, computed } from 'vue'
 import { reactive, toRefs, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { Toast } from 'vant';
-import { UserAddress } from "@src/models/User";
+import { UserAddress } from "@src/models/user";
 import { queryAddressById, modifyUserAddress, addUserAddress } from '@src/api/user'
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'

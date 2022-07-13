@@ -1,4 +1,5 @@
 import request from "@src/request";
+import { SearchParams } from "@src/models/common";
 
 /**
  * 查询品类列表
@@ -72,5 +73,17 @@ export const getSkuList = (params: object) => {
     return request.get({
         url: '/product/sku/list',
         params: params
+    })
+}
+
+/**
+ * 搜索
+ * @param params
+ */
+export const searchProduct = (params: SearchParams) => {
+    return request.post({
+        url: '/product/search/list',
+        data: params,
+        headers: {'Content-Type': 'application/json'}
     })
 }

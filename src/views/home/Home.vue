@@ -17,14 +17,14 @@
 				<van-notice-bar left-icon="volume-o" :text="announcement" />
 				<Category :list="cateGoryList"></Category>
 				<Brand :list="brands"></Brand>
-				<ProductList title="热卖商品"></ProductList>
+				<ProductList title="热卖商品" :list="products"></ProductList>
 			</div>
 		</div>
 	</div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted } from 'vue'
+import { computed, defineComponent, onMounted, Ref } from 'vue'
 import { reactive, toRefs, ref } from 'vue';
 import { useDark } from '@vueuse/core'
 import Head from '@components/Head.vue'
@@ -35,6 +35,8 @@ import Category from './components/Category.vue'
 import Brand from './components/Brand.vue'
 import { getBanners, getAnnouncement } from '@src/api/home'
 import { typeList, brandList } from '@src/api/product'
+import {Sku} from "@src/models/product";
+import {hotSales} from "@src/api/order";
 
 export default defineComponent({
 	name: 'Home',
@@ -52,6 +54,7 @@ export default defineComponent({
 
 		const isFetching = false
 
+    let products: Ref<Sku[]> = ref([])
 		let banners = ref([])
 		let cateGoryList = ref([])
 		let brands = ref([])
@@ -74,6 +77,9 @@ export default defineComponent({
 
 			let res4: any = await brandList({ parentId: 0 })
 			brands.value = res4.rows
+
+      let res5: any = await hotSales()
+      products.value = res5.data as Sku[]
 		})
 
 		const keyWordChange = (e: string) => {
@@ -91,6 +97,7 @@ export default defineComponent({
 			cateGoryList,
 			brands,
 			banners,
+      products,
 			announcement,
 			keyWordChange,
 			toSearch
