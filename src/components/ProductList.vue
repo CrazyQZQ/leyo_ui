@@ -2,7 +2,7 @@
 <template>
   <line-bLock>{{ title }}</line-bLock>
   <!--	<div class="rounded-lg bg-white">-->
-  <div class="grid grid-cols-2 gap-2 p-2 h-96">
+  <div class="grid grid-cols-2 gap-2 p-2">
     <div v-for="(item) in list" :key="item.id" class="h-53 w-full bg-white rounded-lg"
          @click="$router.push('/goodsDetail?id='+item.productId)">
       <div class="h-36">

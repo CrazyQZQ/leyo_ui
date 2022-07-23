@@ -2,22 +2,21 @@
   <div class="h-screen submit-order-body">
     <van-nav-bar title="提交订单" left-arrow @click-left="goBack"></van-nav-bar>
     <div class="h-full">
-      <!-- header -->
-      <van-row class="h-24 my-3 shadow-2xl">
-        <van-col span="20" class="pl-4">
-          <van-row class="h-8 align-middle leading-8">收件人：qq</van-row>
-          <van-row class="h-8 align-middle leading-8">手机号：13333333333</van-row>
-          <van-row class="h-8 align-middle leading-8">地址：前往四川省地方的都是</van-row>
-        </van-col>
-        <van-col span="4" class="h-18">
-          <van-icon size="1.5rem" name="arrow" class="top-7" />
-        </van-col>
-      </van-row>
+      <!-- address -->
+      <van-cell-group inset size="small">
+        <van-cell :title="curAddress?'收货地址':'选择收货地址'" is-link to="address">
+          <template #label v-if="curAddress">
+            <van-row class="h-6 align-middle leading-8">收件人：{{curAddress.receiverName}}</van-row>
+            <van-row class="h-6 align-middle leading-8">手机号：{{curAddress.receiverTel}}</van-row>
+            <van-row class="h-6 align-middle leading-8">地址：{{curAddress.fullAddress}}</van-row>
+          </template>
+        </van-cell>
+      </van-cell-group>
       <van-list class="order-list">
-        <van-card v-for="(item, index) in orderInfo.orderDetailList" :num="item.count" :price="item.sku?item.sku.price:''"
+        <van-card v-for="(item, index) in orderInfo.orderDetailList" :num="item.count" :price="item.sku?item.sku.price:''" :key="index"
           :desc="(item.sku?item.sku.typeName:'') + '-' + (item.sku?item.sku.brandName:'')" :title="item.sku?item.sku.productName:''" :thumb="item.sku?item.sku.imageUrl:''">
           <template #tags>
-            <van-tag class="mr-1" v-for="attr in item.sku.skuAttributes" plain type="danger">{{ attr.value }}</van-tag>
+            <van-tag class="mr-1" v-for="(attr,idx) in item.sku.skuAttributes" plain type="danger" :key="idx">{{ attr.value }}</van-tag>
           </template>
         </van-card>
       </van-list>
@@ -27,12 +26,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted,computed } from 'vue'
-import { useRouter } from 'vue-router';
+import { ref,Ref, reactive, onMounted } from 'vue'
+import { useRouter,useRoute } from 'vue-router';
 import { IGlobalState } from '@src/store'
 import { useStore } from 'vuex'
 import { saveOrder } from '@src/api/order'
 import { IOrderState } from '@src/store/modules/order/interface';
+import { userDefaultAddress, queryAddressById } from '@src/api/user'
+import { UserAddress } from "@src/models/user";
 
 
 export default {
@@ -41,10 +42,40 @@ export default {
   },
   setup() {
     const router = useRouter()
+    const route = useRoute()
     const store = useStore<IGlobalState>()
 
+    let curAddress: Ref<UserAddress> = ref({
+      userId: -1,
+      receiverName: '',
+      receiverTel: '',
+      defaultStatus: 0,
+      postCode: '',
+      province: '',
+      city: '',
+      region: '',
+      areaCode: '',
+      detailAddress: '',
+      fullAddress: ''
+    })
     let orderInfo = reactive({
       ...store.state.order
+    })
+
+    onMounted(async () => {
+      let userId = store.state.auth.userInfo.userId
+      let addressId = route.params.addressId
+      if(addressId){
+        let res: any = await queryAddressById({ id: addressId })
+        if(res.data){
+          curAddress.value = res.data as UserAddress
+        }
+      }else if (userId) {
+        let res: any = await userDefaultAddress({ userId: userId })
+        if(res.data){
+          curAddress.value = res.data as UserAddress
+        }
+      }
     })
 
     const goBack = () => {
@@ -60,21 +91,16 @@ export default {
       // })
     }
 
-
-
-
-
-
     return {
       goBack,
       submit,
       orderInfo,
+      curAddress,
     };
   }
 }
 </script>
 <style lang="less" scoped>
-.submit-order-box {}
 
 .order-list {
   height: calc(100% - 13.5rem);

@@ -7,4 +7,5 @@ export interface IAuthState {
   userInfo: User
   token: Token
   isAuth: boolean
+  selectedUserAddressId: Number
 }

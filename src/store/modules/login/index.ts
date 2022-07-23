@@ -14,7 +14,8 @@ const state: IAuthState = {
     avatar: ''
   },
   token: {},
-  isAuth: false
+  isAuth: false,
+  selectedUserAddressId: -1
 }
 
 const login: Module<IAuthState, IGlobalState> = {
@@ -40,6 +41,9 @@ const login: Module<IAuthState, IGlobalState> = {
       }
       state.token = {}
       state.isAuth = false
+    },
+    [Types.SELECT_ADDRESS](state, data: number) {
+      state.selectedUserAddressId = data
     }
   },
   actions: {
@@ -51,6 +55,9 @@ const login: Module<IAuthState, IGlobalState> = {
     },
     async [Types.LOGOUT]({ commit }, data) {
       return commit(Types.LOGOUT, data)
+    },
+    async [Types.SELECT_ADDRESS]({commit}, data: number) {
+      return commit(Types.SELECT_ADDRESS, data)
     }
   }
 }

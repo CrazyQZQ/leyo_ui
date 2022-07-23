@@ -30,24 +30,31 @@
     <transition name="van-slide-left">
       <section class="w-full" v-show="showHistory === '0'">
         <!--      搜索条件-->
-        <div class="w-full">
-          <van-dropdown-menu>
-            <van-dropdown-item v-model="priceSort" :options="sortOptions" @change="changeSort('0')">
-              <template #title>
-                <span>价格</span>
-                <van-icon v-show="priceSort === 'Asc'" color="#ad0000" name="ascending" />
-                <van-icon v-show="priceSort === 'Desc'" color="#ad0000" name="descending" />
-              </template>
-            </van-dropdown-item>
-            <van-dropdown-item v-model="saleSort" :options="sortOptions" @change="changeSort('1')">
-              <template #title>
-                <span>销量</span>
-                <van-icon v-show="saleSort === 'Asc'" color="#ad0000" name="ascending" />
-                <van-icon v-show="saleSort === 'Desc'" color="#ad0000" name="descending" />
-              </template>
-            </van-dropdown-item>
-          </van-dropdown-menu>
-        </div>
+        <van-row class="h-9 bg-white">
+          <van-col span="5" align="center">综合</van-col>
+          <van-col span="5" align="center">新品优先</van-col>
+          <van-col span="5" align="center">价格</van-col>
+          <van-col span="5" align="center">销量</van-col>
+          <van-col span="4" align="center">筛选</van-col>
+        </van-row>
+        // <div class="w-full">
+        //   <van-dropdown-menu>
+        //     <van-dropdown-item v-model="priceSort" :options="sortOptions" @change="changeSort('0')">
+        //       <template #title>
+        //         <span>价格</span>
+        //         <van-icon v-show="priceSort === 'Asc'" color="#ad0000" name="ascending" />
+        //         <van-icon v-show="priceSort === 'Desc'" color="#ad0000" name="descending" />
+        //       </template>
+        //     </van-dropdown-item>
+        //     <van-dropdown-item v-model="saleSort" :options="sortOptions" @change="changeSort('1')">
+        //       <template #title>
+        //         <span>销量</span>
+        //         <van-icon v-show="saleSort === 'Asc'" color="#ad0000" name="ascending" />
+        //         <van-icon v-show="saleSort === 'Desc'" color="#ad0000" name="descending" />
+        //       </template>
+        //     </van-dropdown-item>
+        //   </van-dropdown-menu>
+        // </div>
         <!--      搜索结果-->
         <div class="w-full px-2.5">
           <ProductList title="搜索结果" :list="products"></ProductList>

@@ -18,6 +18,18 @@ export const login = (params: any) => {
 }
 
 /**
+ * 查询用户默认地址
+ * @param params
+ * @returns
+ */
+export const userDefaultAddress = (params: object) => {
+    return request.get({
+        url: '/system/sysUser/userDefaultAddress',
+        params: params,
+    })
+}
+
+/**
  * 增加用户地址
  * @param params 
  * @returns 
