@@ -8,9 +8,9 @@
 				</template>
 			</Head>
 			<!-- search-input -->
-      <div @click="$router.push('/goodsList?shouHistory=1')">
-        <Search @keywordChange="keyWordChange"></Search>
-      </div>
+			<div @click="$router.push('/goodsList?shouHistory=1')">
+				<Search @keywordChange="keyWordChange"></Search>
+			</div>
 			<!-- content -->
 			<div class="w-11/12 mt-2">
 				<Swiper :list="banners"></Swiper>
@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, Ref } from 'vue'
-import { reactive, toRefs, ref } from 'vue';
+import { reactive, toRefs, ref } from 'vue'
 import { useDark } from '@vueuse/core'
 import Head from '@components/Head.vue'
 import Search from '@components/Search.vue'
@@ -35,8 +35,9 @@ import Category from './components/Category.vue'
 import Brand from './components/Brand.vue'
 import { getBanners, getAnnouncement } from '@src/api/home'
 import { typeList, brandList } from '@src/api/product'
-import {Sku} from "@src/models/product";
-import {hotSales} from "@src/api/order";
+import { Sku, ProductType, Brand as productBrand } from '@src/models/product'
+import { hotSales } from '@src/api/order'
+import { BaseResponseType } from '@src/models/common'
 
 export default defineComponent({
 	name: 'Home',
@@ -46,23 +47,24 @@ export default defineComponent({
 		Swiper,
 		Category,
 		Brand,
-    ProductList
+		ProductList
 	},
 	setup() {
 		let bscroll = null
 		const isDark = useDark()
 
-		const isFetching = false
+		let isFetching = false
 
-    let products: Ref<Sku[]> = ref([])
+		let products: Ref<Sku[]> = ref([])
 		let banners = ref([])
 		let cateGoryList = ref([])
 		let brands = ref([])
 		let announcement = ref('暂无公告')
 		onMounted(async () => {
+			isFetching = true
 			let res: any = await getBanners()
 			if (res.code === 200) {
-				banners.value = res?.data.map((e: { imageUrl: any; }) => {
+				banners.value = res?.data.map((e: { imageUrl: any }) => {
 					return {
 						imgUrl: e.imageUrl,
 						url: ''
@@ -71,16 +73,34 @@ export default defineComponent({
 			}
 			let res2: any = await getAnnouncement()
 			announcement.value = res2.data
-
-			let res3: any = await typeList({ parentId: 0 })
-			cateGoryList.value = res3.rows
-
-			let res4: any = await brandList({ parentId: 0 })
-			brands.value = res4.rows
-
-      let res5: any = await hotSales()
-      products.value = res5.data as Sku[]
+			getTypes()
+			getBrands()
+			let res5: any = await hotSales()
+			products.value = res5.data as Sku[]
+			isFetching = false
 		})
+
+		const getTypes = async () => {
+			const { data } = (await typeList({ parentId: 0 })) as BaseResponseType<ProductType>
+			if (data.rows) {
+				if (data.rows.length > 3) {
+					cateGoryList.value = data.rows.slice(0, 3)
+				} else {
+					cateGoryList.value = data.rows
+				}
+			}
+		}
+
+		const getBrands = async () => {
+			const { data } = (await brandList({ parentId: 0 })) as BaseResponseType<productBrand>
+			if (data.rows) {
+				if (data.rows.length > 3) {
+					brands.value = data.rows.slice(0, 3)
+				} else {
+					brands.value = data.rows
+				}
+			}
+		}
 
 		const keyWordChange = (e: string) => {
 			console.log('keyword:', e)
@@ -88,7 +108,7 @@ export default defineComponent({
 
 		const toSearch = () => {
 			console.log('去搜索页')
-      // $router.push('/goodsList?shouHistory=1')
+			// $router.push('/goodsList?shouHistory=1')
 		}
 
 		return {
@@ -97,7 +117,7 @@ export default defineComponent({
 			cateGoryList,
 			brands,
 			banners,
-      products,
+			products,
 			announcement,
 			keyWordChange,
 			toSearch

@@ -1,5 +1,5 @@
 <template>
-  <van-tabbar v-model="active" fixed placeholder safe-area-inset-bottom>
+  <van-tabbar v-model="active" fixed placeholder safe-area-inset-bottom active-color="#ff770f">
     <van-tabbar-item v-for="(item,index) in tabs" :key="index" :icon="item.icon" :to="item.path">{{item.title}}</van-tabbar-item>
   </van-tabbar>
 </template>
