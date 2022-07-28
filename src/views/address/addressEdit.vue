@@ -21,6 +21,7 @@ import { queryAddressById, modifyUserAddress, addUserAddress } from '@src/api/us
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
 import { areaList } from '@vant/area-data';
+import { toggle } from '@src/util/useToggle'
 
 export default {
     name: 'AddressEdit',
@@ -36,6 +37,7 @@ export default {
         onMounted(async () => {
             let addressId = route.params.addressId
             if (addressId) {
+                toggle(true)
                 // 修改
                 let res: any = await queryAddressById({ id: addressId })
                 curAddress.value = {
@@ -50,6 +52,7 @@ export default {
                     areaCode: res.data.areaCode,
                     postalCode: res.data.postCode,
                 }
+                toggle(false)
             } else {
                 // 新增
             }

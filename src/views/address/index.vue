@@ -25,6 +25,7 @@ import { UserAddress } from '@src/models/user'
 import { queryUserAddress } from '@src/api/user'
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
+import { toggle } from '@src/util/useToggle'
 
 export default {
 	name: 'Address',
@@ -40,6 +41,7 @@ export default {
 		onMounted(async () => {
 			let userId = store.state.auth.userInfo.userId
 			if (userId) {
+				toggle(true)
 				let res: any = await queryUserAddress({ userId: userId })
 				list.value = res.data.map(
 					(e: { id: any; receiverName: any; receiverTel: any; fullAddress: any; defaultStatus: number }) => {
@@ -52,6 +54,7 @@ export default {
 						}
 					}
 				)
+				toggle(false)
 			}
 		})
 		const disabledList = ref([])

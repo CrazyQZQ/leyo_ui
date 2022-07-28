@@ -89,6 +89,7 @@ import { IGlobalState } from '@src/store'
 import { getStatusCount } from '@src/api/order'
 import { BaseResponseType } from "@src/models/common";
 import ProductList from '@src/components/ProductList.vue'
+import { toggle } from '@src/util/useToggle'
 
 export default defineComponent({
   name: 'me',
@@ -137,6 +138,7 @@ export default defineComponent({
     ])
 
     onMounted(async () => {
+      toggle(true)
       const res = await getStatusCount({ userId: store.state.auth.userInfo.userId }) as BaseResponseType<object>
       if (res.code === 200) {
         res.data.forEach((item: { status: number; count: number }) => {
@@ -146,6 +148,7 @@ export default defineComponent({
           }
         })
       }
+      toggle(false)
     })
     const goBack = () => {
       router.go(-1)

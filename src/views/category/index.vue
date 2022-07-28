@@ -34,6 +34,7 @@ import Swiper from '@src/components/Swiper.vue'
 import { typeList, brandList } from '@src/api/product'
 import { BaseResponseType } from '@src/models/common'
 import { ProductType } from '@src/models/product'
+import { toggle } from '@src/util/useToggle'
 export default defineComponent({
 	name: 'Home',
 	components: {
@@ -43,6 +44,7 @@ export default defineComponent({
 		let categories: Ref<ProductType[]> = ref([])
 		let subCategories: Ref<ProductType[]> = ref([])
 		onMounted(async () => {
+			toggle(true)
 			await typeList({ parentId: 0 }).then((res) => {
 				const { data } = res as BaseResponseType<ProductType>
 				categories.value = data.rows || []
@@ -54,8 +56,7 @@ export default defineComponent({
 					})
 				}
 			})
-
-			// let res2: any = await brandList({parentId: 0})
+			toggle(false)
 		})
 
 		const banerList = [

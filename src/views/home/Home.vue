@@ -38,6 +38,7 @@ import { typeList, brandList } from '@src/api/product'
 import { Sku, ProductType, Brand as productBrand } from '@src/models/product'
 import { hotSales } from '@src/api/order'
 import { BaseResponseType } from '@src/models/common'
+import { toggle } from '@src/util/useToggle'
 
 export default defineComponent({
 	name: 'Home',
@@ -61,6 +62,7 @@ export default defineComponent({
 		let brands = ref([])
 		let announcement = ref('暂无公告')
 		onMounted(async () => {
+			toggle(true)
 			isFetching = true
 			let res: any = await getBanners()
 			if (res.code === 200) {
@@ -78,6 +80,7 @@ export default defineComponent({
 			let res5: any = await hotSales()
 			products.value = res5.data as Sku[]
 			isFetching = false
+			toggle(false)
 		})
 
 		const getTypes = async () => {

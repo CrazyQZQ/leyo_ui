@@ -38,6 +38,7 @@ import { Toast } from 'vant';
 import { ShoppingCartItem, SkuAttributes } from "@src/models/product";
 import { Order, OrderDetail } from "@src/models/order";
 import { BaseResponseType } from "@src/models/common";
+import { toggle } from '@src/util/useToggle'
 
 export default {
   name: 'ShoppingCart',
@@ -67,12 +68,14 @@ export default {
     onMounted(async () => {
       let userId = store.state.auth.userInfo.userId
       if (userId) {
+        toggle(true)
         await getShopingCartItems({ userId: userId }).then(res => {
           let r = res as BaseResponseType<object>
           cartItems.value = r.data as ShoppingCartItem[]
         }).catch(err => {
           cartItems.value = []
         })
+        toggle(false)
       }
     })
     const onSubmit = () => {

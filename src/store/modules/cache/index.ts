@@ -5,6 +5,7 @@ import * as Types from './types'
 
 const state: ICacheState = {
     searchHistory: [],
+    loading: false
 }
 
 const cacheInfo: Module<ICacheState, IGlobalState> = {
@@ -24,6 +25,9 @@ const cacheInfo: Module<ICacheState, IGlobalState> = {
         },
         [Types.CLEAR_SEARCH_HISTORY](state, data) {
             state.searchHistory.length = 0
+        },
+        [Types.TOGGLE_LOADING](state, data: boolean) {
+            state.loading = data
         }
     },
     actions: {
@@ -35,6 +39,10 @@ const cacheInfo: Module<ICacheState, IGlobalState> = {
         },
         async [Types.CLEAR_SEARCH_HISTORY]({commit}, data) {
             return commit(Types.CLEAR_SEARCH_HISTORY, data)
+        }
+        ,
+        async [Types.TOGGLE_LOADING]({commit}, data: boolean) {
+            return commit(Types.TOGGLE_LOADING, data)
         }
     }
 }

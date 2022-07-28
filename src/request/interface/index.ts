@@ -12,7 +12,7 @@ class configrequest {
   interceptors?: RequestInterceptors
 
   constructor(config: RequestConfig) {
-    let loading = true
+    // let loading = true
     // 创建axios实例
     this.instance = axios.create(config)
 
@@ -34,7 +34,8 @@ class configrequest {
     this.instance.interceptors.request.use(
       (config) => {
         // 加载动画
-        if (loading) {
+        console.log(store.state.cacheInfo.loading)
+        if (store.state.cacheInfo.loading) {
           Toast.loading({
             message: '加载中...',
             forbidClick: true
@@ -53,7 +54,10 @@ class configrequest {
     // 所有请求的响应拦截器
     this.instance.interceptors.response.use(
       async (response: AxiosResponse) => {
-        Toast.clear()
+        console.log(store.state.cacheInfo.loading)
+        if(!store.state.cacheInfo.loading){
+          Toast.clear()
+        }
         // Some example codes here:
         // code == 200: success
         // code == 1000：业务异常
@@ -82,7 +86,9 @@ class configrequest {
         }
       },
       (error: any) => {
-        Toast.clear()
+        if(!store.state.cacheInfo.loading){
+          Toast.clear()
+        }
         Toast(error.message)
         store.dispatch('LOGOUT')
         return Promise.reject(error)
