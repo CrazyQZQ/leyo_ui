@@ -2,8 +2,8 @@
 	<div
 		className="container mx-auto overflow-x-hidden overflow-y-hidden h-screen bg-white dark:bg-gray-800 flex flex-col">
 		<!-- head logo -->
-		<div class="flex flex-col h-2/5 justify-center items-center">
-			<div class="shadow w-22 h-22">
+		<div class="flex flex-col justify-center items-center">
+			<div class="w-22 h-22">
 				<img :src="logoUrl" alt="airi logo" />
 			</div>
 		</div>
@@ -21,24 +21,9 @@
 			</div>
 		</div>
 		<!-- submit button -->
-		<div @click="doLogin" class="
-				w-10/12
-				h-14
-				shadow-md
-				self-center
-				flex flex-row
-				justify-center
-				items-center
-				mt-8
-				rounded-full
-				bg-gradient-to-r
-				from-purple-300
-				via-purple-400
-				to-purple-500
-			">
-			<p class="text-white text-base font-medium">登录</p>
-		</div>
-		<!-- bottom action -->
+    <van-row class="mt-8 w-10/12 h-14 self-center" justify="center">
+      <van-button round type="danger" block color="#ff770f" @click="doLogin">登录</van-button>
+    </van-row>
 		<div class="flex flex-row justify-center items-center mt-8 divide-x divide-gray-300">
 			<p class="pr-5 text-gray-400 text-sm">找回密码</p>
 			<p class="pl-5 text-gray-800 text-sm">新用户注册</p>
@@ -114,3 +99,9 @@ export default defineComponent({
 	}
 })
 </script>
+<style lang="less" scoped>
+
+.submit-btn {
+  background-color: #ff770f;
+}
+</style>

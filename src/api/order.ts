@@ -39,7 +39,7 @@ export const getShopingCartItems = (params: object) => {
  * @param params
  */
 export const addCartItem = (params: object) => {
-    return request.put({
+    return request.post({
         url: '/order/cart/add',
         data: params,
         headers: { 'Content-Type': 'application/json' }
@@ -51,7 +51,7 @@ export const addCartItem = (params: object) => {
  * @param params
  */
 export const updateCartItemNum = (params: object) => {
-    return request.post({
+    return request.put({
         url: '/order/cart/update',
         params: params
     })

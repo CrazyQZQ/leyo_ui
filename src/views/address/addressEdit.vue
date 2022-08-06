@@ -32,10 +32,11 @@ export default {
         const router = useRouter()
         const route = useRoute()
         const userId = store.state.auth.userInfo.userId
+        const addressId = route.params.addressId
         let curAddress = ref({})
 
         onMounted(async () => {
-            let addressId = route.params.addressId
+
             if (addressId) {
                 toggle(true)
                 // 修改
@@ -53,8 +54,6 @@ export default {
                     postalCode: res.data.postCode,
                 }
                 toggle(false)
-            } else {
-                // 新增
             }
         })
 

@@ -50,7 +50,7 @@
       </div>
     </section>
     <div class="px-2 mb-3">
-      <ProductList title="为您推荐"></ProductList>
+      <ProductList title="为您推荐" :list="products"></ProductList>
     </div>
     <!--    <section class="w-full flex justify-center px-4 -mt-16">-->
     <!--      &lt;!&ndash;      我的订单&ndash;&gt;-->
@@ -82,12 +82,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref, computed } from 'vue'
+import { defineComponent, onMounted, ref, computed, Ref } from 'vue'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { IGlobalState } from '@src/store'
-import { getStatusCount } from '@src/api/order'
+import { getStatusCount, hotSales } from '@src/api/order'
 import { BaseResponseType } from "@src/models/common";
+import { Sku } from '@src/models/product'
 import ProductList from '@src/components/ProductList.vue'
 import { toggle } from '@src/util/useToggle'
 
@@ -100,6 +101,7 @@ export default defineComponent({
     const loading = false
     const router = useRouter()
     const store = useStore<IGlobalState>()
+    let products: Ref<Sku[]> = ref([])
     const userInfo = computed(() => {
       return store.state.auth.userInfo
     })
@@ -148,6 +150,8 @@ export default defineComponent({
           }
         })
       }
+      let res1: any = await hotSales()
+      products.value = res1.data as Sku[]
       toggle(false)
     })
     const goBack = () => {
@@ -162,7 +166,8 @@ export default defineComponent({
       loading,
       goBack,
       goTo,
-      orders
+      orders,
+      products,
     }
   }
 })

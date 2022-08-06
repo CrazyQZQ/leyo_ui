@@ -1,9 +1,3 @@
-/*
- * @Author: pipe 
- * @Date: 2021-06-08 10:28:16 
- * @Last Modified by: pipe
- * @Last Modified time: 2021-06-08 11:13:58
- */
 <template>
   <div class="flex items-center p-1">
     <div class="inline-block bg-purple-500 w-1 h-5  mx-2"></div>

@@ -39,7 +39,11 @@ import {
 	Cell,
 	CellGroup,
 	DropdownMenu,
-	DropdownItem
+	DropdownItem,
+	RadioGroup,
+	Radio,
+	Popover,
+	Field,
 	// Toast
 } from 'vant'
 
@@ -84,5 +88,9 @@ export function useVant(app: App<Element>) {
 	app.use(CellGroup)
 	app.use(DropdownMenu)
 	app.use(DropdownItem)
+	app.use(RadioGroup)
+	app.use(Radio)
+	app.use(Popover)
+	app.use(Field)
 	return app
 }

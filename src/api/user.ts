@@ -35,7 +35,7 @@ export const userDefaultAddress = (params: object) => {
  * @returns 
  */
 export const addUserAddress = (params: UserAddress) => {
-    return request.put({
+    return request.post({
         url: '/system/sysUser/addUserAddress',
         data: params,
         headers: { 'Content-Type': 'application/json' }
@@ -48,7 +48,7 @@ export const addUserAddress = (params: UserAddress) => {
  * @returns 
  */
 export const modifyUserAddress = (params: UserAddress) => {
-    return request.post({
+    return request.put({
         url: '/system/sysUser/modifyUserAddress',
         data: params,
         headers: { 'Content-Type': 'application/json' }

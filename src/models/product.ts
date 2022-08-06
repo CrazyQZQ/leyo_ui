@@ -19,9 +19,9 @@ export interface Product {
 
 // 商品品类
 export interface ProductType {
-    id?: number;
-    parentId?: number;
-    name?: string;
+    id: number;
+    parentId: number;
+    name: string;
     orderNum?: number;
     createBy?: string;
     createTime?: string;
