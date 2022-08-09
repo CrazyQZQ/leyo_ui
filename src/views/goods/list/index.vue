@@ -52,38 +52,40 @@
 		</section>
 		<!-- </transition> -->
 		<transition name="van-fade" mode="out-in">
-		<section class="w-full" v-show="showHistory === '0'">
-			<!--      搜索条件-->
-			<van-row class="h-9 pt-2 bg-white text-gray-500 font-sans">
-				<van-col span="5" :class="activeCondition==='0'?'active':''" align="center" @click="onSelectSalesSort('Desc');activeCondition='0'">综合</van-col>
-				<van-col span="5" :class="activeCondition==='1'?'active':''" align="center" @click="createTimeSort">新品优先</van-col>
-				<van-col span="5" align="center">
-          <van-popover v-model:show="changePriceSort" :actions="sortActions" @select="onSelectPriceSort">
-            <template #reference>
-              <span :class="activeCondition==='2'?'active':''">价格</span>
-              <van-icon v-show="activeCondition === '2' && priceSort === 'Asc'" color="#ff770f" name="ascending" />
-              <van-icon v-show="activeCondition === '2' && priceSort === 'Desc'" color="#ff770f" name="descending" />
-            </template>
-          </van-popover>
-        </van-col>
-				<van-col span="5" align="center">
-          <van-popover v-model:show="changeSalesSort" :actions="sortActions" @select="onSelectSalesSort">
-            <template #reference>
-              <span :class="activeCondition==='3'?'active':''">销量</span>
-              <van-icon v-show="activeCondition === '3' && saleSort === 'Asc'" color="#ff770f" name="ascending" />
-              <van-icon v-show="activeCondition === '3' && saleSort === 'Desc'" color="#ff770f" name="descending" />
-            </template>
-          </van-popover>
-        </van-col>
-				<van-col span="4" align="center" @click="showExtCondition = true">
-          筛选<van-icon name="filter-o" />
-        </van-col>
-			</van-row>
-			<!--      搜索结果-->
-			<div class="w-full px-2.5">
-				<ProductList title="搜索结果" :list="products"></ProductList>
-			</div>
-		</section>
+      <section class="w-full" v-show="showHistory === '0'">
+        <!--      搜索条件-->
+        <van-sticky :offset-top="0">
+          <van-row class="h-9 pt-2 bg-white text-gray-500 font-sans">
+            <van-col span="5" :class="activeCondition==='0'?'active':''" align="center" @click="onSelectSalesSort('Desc');activeCondition='0'">综合</van-col>
+            <van-col span="5" :class="activeCondition==='1'?'active':''" align="center" @click="createTimeSort">新品优先</van-col>
+            <van-col span="5" align="center">
+              <van-popover v-model:show="changePriceSort" :actions="sortActions" @select="onSelectPriceSort">
+                <template #reference>
+                  <span :class="activeCondition==='2'?'active':''">价格</span>
+                  <van-icon v-show="activeCondition === '2' && priceSort === 'Asc'" color="#ff770f" name="ascending" />
+                  <van-icon v-show="activeCondition === '2' && priceSort === 'Desc'" color="#ff770f" name="descending" />
+                </template>
+              </van-popover>
+            </van-col>
+            <van-col span="5" align="center">
+              <van-popover v-model:show="changeSalesSort" :actions="sortActions" @select="onSelectSalesSort">
+                <template #reference>
+                  <span :class="activeCondition==='3'?'active':''">销量</span>
+                  <van-icon v-show="activeCondition === '3' && saleSort === 'Asc'" color="#ff770f" name="ascending" />
+                  <van-icon v-show="activeCondition === '3' && saleSort === 'Desc'" color="#ff770f" name="descending" />
+                </template>
+              </van-popover>
+            </van-col>
+            <van-col span="4" align="center" @click="showExtCondition = true">
+              筛选<van-icon name="filter-o" />
+            </van-col>
+          </van-row>
+        </van-sticky>
+        <!--      搜索结果-->
+        <div class="w-full px-2.5">
+          <ProductList title="搜索结果" :list="products"></ProductList>
+        </div>
+      </section>
 		</transition>
 <!--    筛选-->
     <van-popup class="relative" v-model:show="showExtCondition" position="right" :style="{ width: '70%', height: '100%' }">

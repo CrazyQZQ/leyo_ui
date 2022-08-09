@@ -80,9 +80,9 @@ export default defineComponent({
 		const onClickLeft = () => {}
 		const onClickRight = () => {}
 		const onChangeCategory = async (index: number) => {
-			let res: any = await typeList({ parentId: categories.value[index]['id'] })
-			subCategories.value = res.rows
-			console.log(subCategories.value)
+			let res = await typeList({ parentId: categories.value[index]['id'] })
+			const { data } = res as BaseResponseType<ProductType>
+			subCategories.value = data.rows || []
 		}
 		return {
 			categories,

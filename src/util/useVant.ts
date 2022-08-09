@@ -44,6 +44,7 @@ import {
 	Radio,
 	Popover,
 	Field,
+	Sticky,
 	// Toast
 } from 'vant'
 
@@ -92,5 +93,6 @@ export function useVant(app: App<Element>) {
 	app.use(Radio)
 	app.use(Popover)
 	app.use(Field)
+	app.use(Sticky)
 	return app
 }

@@ -70,8 +70,8 @@ class configrequest {
         if (res.code !== 200) {
           if (res.code === 1004) {
             Dialog.alert({
-              title: 'warning',
-              message: '你已被登出，请重新登录',
+              title: '提醒',
+              message: '登录已过期，请重新登录',
               theme: 'round-button',
             }).then(() => {
               router.push({ path: '/login' })

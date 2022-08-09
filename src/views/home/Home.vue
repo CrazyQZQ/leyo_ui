@@ -6,16 +6,18 @@
 			</template>
 		</Head>
 		<!-- search-input -->
-		<div @click="$router.push('/goodsList?shouHistory=1')">
-			<Search @keywordChange="keyWordChange"></Search>
-		</div>
+		<van-sticky :offset-top="0">
+			<div @click="$router.push('/goodsList?shouHistory=1')">
+				<Search @keywordChange="keyWordChange"></Search>
+			</div>
+		</van-sticky>
 		<!-- content -->
-		<div class="w-11/12 mt-2">
+		<div class="w-full px-2 mt-2">
 			<Swiper :list="banners"></Swiper>
 			<van-notice-bar left-icon="volume-o" :text="announcement" />
 			<Category :list="cateGoryList"></Category>
-			<Brand :list="brands"></Brand>
-			<ProductList title="热卖商品" :list="products"></ProductList>
+			<!-- <Brand :list="brands"></Brand> -->
+			<ProductList class="mt-2" title="精选好物" :list="products"></ProductList>
 		</div>
 	</div>
 </template>
@@ -77,11 +79,7 @@ export default defineComponent({
 		const getTypes = async () => {
 			const { data } = (await typeList({ parentId: 0 })) as BaseResponseType<ProductType>
 			if (data.rows) {
-				if (data.rows.length > 3) {
-					cateGoryList.value = data.rows.slice(0, 3)
-				} else {
-					cateGoryList.value = data.rows
-				}
+				cateGoryList.value = data.rows
 			}
 		}
 
