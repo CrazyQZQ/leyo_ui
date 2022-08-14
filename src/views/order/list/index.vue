@@ -1,19 +1,21 @@
 <template>
 	<div class="me-container">
 		<van-nav-bar title="我的订单" left-arrow @click-left="goBack"></van-nav-bar>
-		<van-tabs
-			@click="onChangeTab"
-			:color="'#ff770f'"
-			:title-active-color="'#ff770f'"
-			v-model:active="orderStatus"
-		>
-			<van-tab title="全部" name></van-tab>
-			<van-tab title="待付款" name="0"></van-tab>
-			<van-tab title="待发货" name="1"></van-tab>
-			<van-tab title="待收货" name="2"></van-tab>
-			<van-tab title="待评价" name="3"></van-tab>
-			<van-tab title="退款/售后" name="4"></van-tab>
-		</van-tabs>
+		<van-sticky>
+			<van-tabs
+				@click="onChangeTab"
+				:color="'#ff770f'"
+				:title-active-color="'#ff770f'"
+				v-model:active="orderStatus"
+			>
+				<van-tab title="全部" name></van-tab>
+				<van-tab title="待付款" name="0"></van-tab>
+				<van-tab title="待发货" name="1"></van-tab>
+				<van-tab title="待收货" name="2"></van-tab>
+				<van-tab title="待评价" name="3"></van-tab>
+				<van-tab title="退款/售后" name="4"></van-tab>
+			</van-tabs>
+		</van-sticky>
 		<div class="h-full w-full">
 			<van-pull-refresh
 				v-model="refreshing"
@@ -25,26 +27,24 @@
 					v-model:loading="loading"
 					:finished="finished"
 					finished-text="没有更多了"
-					offset="90"
 					@load="onLoad"
 					:immediate-check="false"
 					class="w-full"
-					style="height: 42.6rem;"
 				>
 					<div
 						v-for="(item, index) in list"
 						:key="index"
 						class="shadow-md p-1 m-5 bg-white rounded-lg van-hairline--top"
-						@click="goTo(item)"
 					>
 						<van-row class="text-sm px-2">
-							<van-row>
-								<span class="font-bold">订单编号：</span>
-								<span class="text-red-500">{{ item.number?item.number:'' }}</span>
-							</van-row>
-							<van-row>
-								<span class="font-bold">收货地址：</span>
-								<span class="text-gray-400">{{ item.addressName?item.addressName:'' }}</span>
+							<van-row class="w-full">
+								<van-col span="12" class="text-left">
+									<img :src="logoUrl" class="w-10 inline-block" />
+									<span>Leyo精选</span>
+								</van-col>
+								<van-col span="12">
+									<span class="float-right mt-1">{{formatOrderStatus(item.orderStatus)}}</span>
+								</van-col>
 							</van-row>
 						</van-row>
 						<van-card
@@ -55,12 +55,19 @@
 							:desc="one.sku.typeName + ' ' + one.sku.brandName"
 							:title="one.productName"
 							:thumb="one.sku.imageUrl?one.sku.imageUrl:defaultErrorImage"
+							@click="goTo(item)"
 						>
 							<template #footer>
 								<span class="font-bold">价格：</span>
 								<span class="text-red-500">￥{{ item.totalAmount?item.totalAmount:'' }}</span>
 							</template>
 						</van-card>
+						<van-row class="w-full text-sm pt-1">
+							<van-col :span="24">
+								<van-button round color="#ff770f" size="small" class="float-right">再次购买</van-button>
+								<van-button round type="default" size="small" class="float-right right-3">查看评价</van-button>
+							</van-col>
+						</van-row>
 					</div>
 				</van-list>
 			</van-pull-refresh>
@@ -69,7 +76,8 @@
 </template>
 
 <script lang="ts">
-import { reactive, toRefs, onMounted } from 'vue'
+import logoUrl from '@assets/logo.png'
+import { reactive, toRefs, onMounted, computed } from 'vue'
 import { getOrderList } from '@src/api/order'
 import { Order, OrderDetail } from '@src/models/order'
 import { useRouter, useRoute } from 'vue-router'
@@ -103,7 +111,6 @@ export default {
 		})
 
 		const loadData = () => {
-
 			if (state.finished) {
 				state.loading = false
 				return
@@ -143,6 +150,7 @@ export default {
 		}
 
 		const onLoad = () => {
+			console.log('onLoad');
 			if (state.refreshing) {
 				state.list.length = 0
 				state.page = 1
@@ -160,6 +168,22 @@ export default {
 			onLoad()
 		}
 
+		const formatOrderStatus = computed(() => {
+			return (orderStatus: number) => {
+				return orderStatus === 0
+					? '待付款'
+					: orderStatus === 1
+					? '待发货'
+					: orderStatus === 2
+					? '待收货'
+					: orderStatus === 3
+					? '待评价'
+					: orderStatus === 4
+					? '退款/售后'
+					: '已取消'
+			}
+		})
+
 		return {
 			...toRefs(state),
 			onChangeTab,
@@ -167,7 +191,9 @@ export default {
 			goBack,
 			onLoad,
 			onRefresh,
-			defaultErrorImage
+			defaultErrorImage,
+			logoUrl,
+			formatOrderStatus
 		}
 	}
 }
