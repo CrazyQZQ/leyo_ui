@@ -3,8 +3,8 @@
 		<van-nav-bar title="我的订单" left-arrow @click-left="goBack"></van-nav-bar>
 		<van-tabs
 			@click="onChangeTab"
-			:color="'#1baeae'"
-			:title-active-color="'#1baeae'"
+			:color="'#ff770f'"
+			:title-active-color="'#ff770f'"
 			v-model:active="orderStatus"
 		>
 			<van-tab title="全部" name></van-tab>
@@ -85,7 +85,7 @@ export default {
 		const store = useStore<IGlobalState>()
 		const router = useRouter()
 		const route = useRoute()
-		const state = reactive({
+		let state = reactive({
 			orderStatus: '',
 			loading: false,
 			finished: false,
@@ -103,6 +103,7 @@ export default {
 		})
 
 		const loadData = () => {
+
 			if (state.finished) {
 				state.loading = false
 				return
@@ -110,19 +111,15 @@ export default {
 			getOrderList({
 				pageNum: state.page,
 				pageSize: 10,
-				status: state.orderStatus,
+				orderStatus: state.orderStatus,
 				userId: store.state.auth.userInfo.userId
 			}).then((res) => {
 				if (res) {
 					const { data } = res as BaseResponseType<Order>
 					let arr = data.rows as Order[]
-					arr.forEach((item) => {
-						state.list.push(item)
-					})
 					state.list = state.list.concat(arr)
 					state.total = data.total || 0
 				}
-
 				state.loading = false
 				if (state.list.length >= state.total) {
 					state.finished = true
@@ -137,8 +134,7 @@ export default {
 
 		const goTo = (order: Order) => {
 			if (order && order.id) {
-				const id: number = order.id
-				router.push({ path: '/orderDetail', query: { id } })
+				router.push(`/orderDetail?orderId=${order.id}`)
 			}
 		}
 

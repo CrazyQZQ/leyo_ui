@@ -86,9 +86,11 @@ export default {
       }
       let orderDetailList: OrderDetail[] = []
       let totalCount = 0
+      let cartIds: number[] = []
       cartItems.value.forEach(item => {
         if (item && item.sku && item.checked) {
           totalCount += item.num || 0
+          cartIds.push(item.id)
           orderDetailList.push({
             skuId: item.skuId || 0,
             productName: '',
@@ -104,7 +106,7 @@ export default {
           totalCount: totalCount
         },
         orderDetailList: orderDetailList,
-        cartIds: [],
+        cartIds: cartIds,
         accountId: 0
       }
       store.dispatch(`order/${Types.CAHCE_ORDER_INFO}`, orderInfo)

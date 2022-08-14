@@ -34,7 +34,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import logoUrl from '@assets/logo.png'
-import { useLocalStorage, useSessionStorage } from '@vueuse/core'
 import { Notify } from 'vant'
 import { useRouter } from 'vue-router'
 import { login } from '@src/api/user'
@@ -49,7 +48,6 @@ export default defineComponent({
 		const userName = ref('')
 		const passWord = ref('')
 		const route = useRouter()
-		let isLogin = useLocalStorage('IS_LOGIN', true)
 		const doLogin = async () => {
 			if (userName.value === '') {
 				Notify({
@@ -80,13 +78,6 @@ export default defineComponent({
 					name: 'Home'
 				})
 			}
-			// isLogin.value = false
-			// if (isLogin) {
-			// 	useLocalStorage(' ', true)
-				// route.replace({
-				// 	name: 'Home'
-				// })
-			// }
 		}
 
 		return {
@@ -94,7 +85,6 @@ export default defineComponent({
 			userName,
 			passWord,
 			doLogin,
-			isLogin
 		}
 	}
 })

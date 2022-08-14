@@ -1,4 +1,5 @@
 import { Sku } from "./product";
+import { UserAddress } from "./user";
 
 // 订单
 export interface Order {
@@ -14,6 +15,7 @@ export interface Order {
     updateTime?: string;
     remark?: string;
     addressName?: string;
+    address?: UserAddress;
     orderDetailList: OrderDetail[];
 }
 

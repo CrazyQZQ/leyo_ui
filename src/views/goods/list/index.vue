@@ -172,7 +172,7 @@ export default {
     let activeCondition = ref('')
 		const searchParams = reactive({
 			priceSort: '',
-			saleSort: 'null',
+			saleSort: '',
 			brands: [],
 			categories: [],
 			keyword: '',

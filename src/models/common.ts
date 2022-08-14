@@ -4,7 +4,7 @@
 export interface BaseResponseType<T> {
     code: number;
     msg: string;
-    data?: any;
+    data: any;
 }
 /**
  * 搜索条件

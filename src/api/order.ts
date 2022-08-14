@@ -24,6 +24,17 @@ export const saveOrder = (params: object) => {
 }
 
 /**
+ * 订单详情
+ * @returns
+ */
+export const getOrderDetail = (params: object) => {
+    return request.get({
+        url: '/order/detail',
+        params: params
+    })
+}
+
+/**
  * 获取购物车列表
  * @returns
  */

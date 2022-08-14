@@ -113,8 +113,6 @@ export default defineComponent({
       selectedSku.value = skus.value.find(item => {
         return item.spec === selectAttrStr
       }) || {}
-      console.log(selectedSku.value);
-      
       num.value = 0
     }
     const addShoppingCart = () => {

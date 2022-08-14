@@ -52,3 +52,16 @@ export interface UserAddress {
     createBy?: string;
     createTime?: string;
 }
+
+// 账户信息
+export interface SysAccount {
+    accountId: number;
+    userId: number;
+    accountCode: string;
+    accountName: string;
+    amount: number;
+    updateBy?: string;
+    updateTime?: string;
+    createBy?: string;
+    createTime?: string;
+}

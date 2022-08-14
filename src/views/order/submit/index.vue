@@ -27,7 +27,7 @@
           </van-card>
         </van-list>
       </div>
-      <pay-type @emitPayType="changePayType"></pay-type>
+      <pay-type @payTypeChange="changePayType"></pay-type>
       <van-submit-bar :price="orderInfo.order.totalAmount * 100" button-text="提交订单" @submit="submit" />
     </div>
   </div>
@@ -41,8 +41,10 @@ import { useStore } from 'vuex'
 import { saveOrder } from '@src/api/order'
 import { IOrderState } from '@src/store/modules/order/interface';
 import { userDefaultAddress, queryAddressById } from '@src/api/user'
-import { UserAddress } from "@src/models/user";
+import { UserAddress, SysAccount } from "@src/models/user";
 import PayType from '@src/components/payType.vue'
+import { BaseResponseType } from '@src/models/common'
+import { Toast } from "vant";
 
 
 export default {
@@ -54,6 +56,13 @@ export default {
     const router = useRouter()
     const route = useRoute()
     const store = useStore<IGlobalState>()
+    let selectedAccount: Ref<SysAccount> = ref({
+      accountId: null,
+      userId: null,
+      accountCode: '',
+      accountName: '',
+      amount: 0
+    })
 
     let curAddress: Ref<UserAddress> = ref({
       userId: -1,
@@ -91,18 +100,22 @@ export default {
     const goBack = () => {
       router.go(-1)
     }
-    const submit = () => {
+    const submit = async () => {
+      Toast.loading('加载中...')
       let params = JSON.parse(JSON.stringify(store.state.order))
-      params.order.userAddressId = 3
+      params.order.userAddressId = curAddress.value.id
       params.order.userId = store.state.auth.userInfo.userId
-      params.accountId = 1
-      // saveOrder(params).then(res => {
-      //   console.log(res)
-      // })
+      params.accountId = selectedAccount.value.accountId
+      const { code, data } = await saveOrder(params) as BaseResponseType<number>
+      // Toast.clear()
+      if (code == 200) {
+        Toast.success('支付成功')
+        router.push(`orderDetail?orderId=${data}`)
+      }
     }
 
-    const changePayType = (val: string) => {
-      console.log(val)
+    const changePayType = (val: SysAccount) => {
+      selectedAccount.value = val
     }
 
     return {

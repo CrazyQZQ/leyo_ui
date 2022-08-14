@@ -5,6 +5,7 @@ import { BaseResponseType } from "@src/models/common";
 import { Toast,Dialog } from 'vant'
 import router from '@src/router'
 import store from '@src/store'
+import * as Types from '@src/store/modules/login/types'
 import { BasicException } from '@src/common/common'
 
 class configrequest {
@@ -34,7 +35,6 @@ class configrequest {
     this.instance.interceptors.request.use(
       (config) => {
         // 加载动画
-        console.log(store.state.cacheInfo.loading)
         if (store.state.cacheInfo.loading) {
           Toast.loading({
             message: '加载中...',
@@ -54,7 +54,6 @@ class configrequest {
     // 所有请求的响应拦截器
     this.instance.interceptors.response.use(
       async (response: AxiosResponse) => {
-        console.log(store.state.cacheInfo.loading)
         if(!store.state.cacheInfo.loading){
           Toast.clear()
         }
@@ -69,28 +68,26 @@ class configrequest {
         const res = response.data
         if (res.code !== 200) {
           if (res.code === 1004) {
+            store.dispatch('auth/LOGOUT')
             Dialog.alert({
               title: '提醒',
               message: '登录已过期，请重新登录',
               theme: 'round-button',
             }).then(() => {
-              router.push({ path: '/login' })
+              router.push('/login')
             });
           }
           // 若后台返回错误值，此处返回对应错误对象，下面 error 就会接收
           return Promise.reject(new BasicException(res.code, res.msg || 'Error'))
-          // return Promise.reject(new Error(res.code || '500'))
         } else {
           // 注意返回值
           return response.data
         }
       },
       (error: any) => {
-        if(!store.state.cacheInfo.loading){
-          Toast.clear()
-        }
-        Toast(error.message)
-        store.dispatch('LOGOUT')
+        Toast.clear()
+        Toast(error.msg)
+        store.dispatch('auth/LOGOUT')
         return Promise.reject(error)
       }
     )
@@ -111,22 +108,14 @@ class configrequest {
           const data = (res as any) as BaseResponseType<T>
           if(data.code === 200){
             resolve(res)
-          }else if(data.code === 1004){
-            Toast.fail("用户未登录！")
-            resolve(res)
-            router.push({ path: '/login' })
-          }else {
+          } else {
             Toast.fail(data.msg)
             resolve(res)
           }
         })
         // 如果有错误返回错误
         .catch((err) => {
-          if(err.getCode() === 1004){
-            router.push({ path: '/login' })
-          }else{
-            Toast.fail(err.getMsg())
-          }
+          Toast.fail(err.getMsg())
           return err
         })
     })

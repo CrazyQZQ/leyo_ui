@@ -32,8 +32,15 @@
           <span class="block text-xs">足迹</span>
         </div>
         <div class="row-span-2 text-center">
-          <van-icon name="balance-pay" size="1.5rem"/>
-          <span class="block text-xs">零钱</span>
+          <van-popover v-model:show="showAmount" theme="dark">
+            <p class="w-20 h-10 p-2 text-center">￥{{account.amount}}</p>
+            <template #reference>
+              <div>
+                <van-icon name="balance-pay" size="1.5rem"/>
+                <span class="block text-xs">零钱</span>
+              </div>
+            </template>
+          </van-popover>
         </div>
       </div>
 <!--      订单-->
@@ -43,7 +50,7 @@
           <span class="absolute right-0 text-xs" @click="$router.push('/order?status=')">全部 ></span>
         </div>
         <div class="row-span-2 text-center" v-for="(item, index) in orders" :key="index"
-          @click="$router.push('/order?status=' + item.status)">
+          @click="$router.push('/order?status=' + item.orderStatus)">
           <van-icon :name="item.icon" size="1.5rem" :badge="item.count" />
           <span class="block text-xs">{{ item.title }}</span>
         </div>
@@ -52,32 +59,6 @@
     <div class="px-2 mb-3">
       <ProductList title="为您推荐" :list="products"></ProductList>
     </div>
-    <!--    <section class="w-full flex justify-center px-4 -mt-16">-->
-    <!--      &lt;!&ndash;      我的订单&ndash;&gt;-->
-    <!--      <div class="rounded-lg bg-white h10">-->
-    <!--        <div class="h-full w5">-->
-    <!--          <van-icon name="peer-pay"/>-->
-    <!--        </div>-->
-    <!--        <ul class="user-list">-->
-    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/order', {})">-->
-    <!--            <span>我的订单</span>-->
-    <!--            <van-icon name="arrow"/>-->
-    <!--          </li>-->
-    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/setting', {})">-->
-    <!--            <span>账号管理</span>-->
-    <!--            <van-icon name="arrow"/>-->
-    <!--          </li>-->
-    <!--          <li class="van-hairline&#45;&#45;bottom" @click="goTo('/address', {})">-->
-    <!--            <span>地址管理</span>-->
-    <!--            <van-icon name="arrow"/>-->
-    <!--          </li>-->
-    <!--          <li @click="goTo('/about', {})">-->
-    <!--            <span>关于我们</span>-->
-    <!--            <van-icon name="arrow"/>-->
-    <!--          </li>-->
-    <!--        </ul>-->
-    <!--      </div>-->
-    <!--    </section>-->
   </div>
 </template>
 
@@ -87,7 +68,9 @@ import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import { IGlobalState } from '@src/store'
 import { getStatusCount, hotSales } from '@src/api/order'
+import { getAccountByUserId } from '@src/api/user'
 import { BaseResponseType } from "@src/models/common";
+import { SysAccount } from "@src/models/usr";
 import { Sku } from '@src/models/product'
 import ProductList from '@src/components/ProductList.vue'
 import { toggle } from '@src/util/useToggle'
@@ -101,7 +84,15 @@ export default defineComponent({
     const loading = false
     const router = useRouter()
     const store = useStore<IGlobalState>()
+    const showAmount = ref(false)
     let products: Ref<Sku[]> = ref([])
+    let account: Ref<SysAccount> = ref({
+      accountId: null,
+      userId: null,
+      accountCode: '',
+      accountName: '',
+      amount: 0
+    })
     const userInfo = computed(() => {
       return store.state.auth.userInfo
     })
@@ -110,31 +101,31 @@ export default defineComponent({
       {
         icon: "peer-pay",
         title: "待付款",
-        status: 0,
+        orderStatus: 0,
         count: 0
       },
       {
         icon: "send-gift-o",
         title: "待发货",
-        status: 1,
+        orderStatus: 1,
         count: 0
       },
       {
         icon: "logistics",
         title: "待收货",
-        status: 2,
+        orderStatus: 2,
         count: 0
       },
       {
         icon: "chat-o",
         title: "待评价",
-        status: 3,
+        orderStatus: 3,
         count: 0
       },
       {
         icon: "refund-o",
         title: "退款/售后",
-        status: 4,
+        orderStatus: 4,
         count: 0
       }
     ])
@@ -143,8 +134,8 @@ export default defineComponent({
       toggle(true)
       const res = await getStatusCount({ userId: store.state.auth.userInfo.userId }) as BaseResponseType<object>
       if (res.code === 200) {
-        res.data.forEach((item: { status: number; count: number }) => {
-          const index = orders.value.findIndex(i => i.status === item.status)
+        res.data.forEach((item: { orderStatus: number; count: number }) => {
+          const index = orders.value.findIndex(i => i.orderStatus === item.orderStatus)
           if (index !== -1) {
             orders.value[index].count = item.count
           }
@@ -152,8 +143,15 @@ export default defineComponent({
       }
       let res1: any = await hotSales()
       products.value = res1.data as Sku[]
+      await getAccount()
       toggle(false)
     })
+
+    const getAccount = async () => {
+      const { data } = await getAccountByUserId({userId: store.state.auth.userInfo.userId}) as BaseResponseType<SysAccount>
+      account.value = data
+    }
+
     const goBack = () => {
       router.go(-1)
     }
@@ -161,6 +159,7 @@ export default defineComponent({
     const goTo = (r: string, query: any) => {
       router.push({ path: r, query: query || {} })
     }
+
     return {
       userInfo,
       loading,
@@ -168,6 +167,8 @@ export default defineComponent({
       goTo,
       orders,
       products,
+      account,
+      showAmount,
     }
   }
 })

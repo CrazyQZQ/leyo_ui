@@ -90,3 +90,15 @@ export const deleteUserAddress = (params: object) => {
         params: params,
     })
 }
+
+/**
+ * 用户id获取账户信息
+ * @param params
+ * @returns
+ */
+export const getAccountByUserId = (params: object) => {
+    return request.get({
+        url: '/account/getAccountByUserId',
+        params: params,
+    })
+}
