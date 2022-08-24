@@ -206,69 +206,68 @@ export default {
     })
 
 		const onSearch = async (value: string) => {
-			if (value) {
-        toggle(true)
-				store.dispatch(`cacheInfo/${Types.ADD_SEARCH_HISTORY}`, value)
-				showHistory.value = '0'
-        let queryVos: SearchItem[] = []
-        let highlightField: string[] = []
-				let keywordSearchItem: SearchItem = {
-					field: 'productName',
-					keyword: value,
-					queryType: '0'
-				}
+      toggle(true)
+      store.dispatch(`cacheInfo/${Types.ADD_SEARCH_HISTORY}`, value)
+      showHistory.value = '0'
+      let queryVos: SearchItem[] = []
+      let highlightField: string[] = []
+      // 处理商品名称查询条件
+      if(value){
+        let keywordSearchItem: SearchItem = {
+          field: 'productName',
+          keyword: value,
+          queryType: '0'
+        }
         highlightField.push('productName')
         queryVos.push(keywordSearchItem)
-        // 处理商品分类查询条件
-        if(searchParams.typeName){
-          let typeSearchItem: SearchItem = {
-            field: 'typeName',
-            keyword: searchParams.typeName,
-            queryType: '0'
-          }
-          highlightField.push('typeName')
-          queryVos.push(typeSearchItem)
+      }
+      // 处理商品分类查询条件
+      if(searchParams.typeName){
+        let typeSearchItem: SearchItem = {
+          field: 'typeName',
+          keyword: searchParams.typeName,
+          queryType: '0'
         }
-        // 处理商品品牌查询条件
-        if(searchParams.brandName){
-          let brandSearchItem: SearchItem = {
-            field: 'brandName',
-            keyword: searchParams.brandName,
-            queryType: '0'
-          }
-          highlightField.push('brandName')
-          queryVos.push(brandSearchItem)
+        highlightField.push('typeName')
+        queryVos.push(typeSearchItem)
+      }
+      // 处理商品品牌查询条件
+      if(searchParams.brandName){
+        let brandSearchItem: SearchItem = {
+          field: 'brandName',
+          keyword: searchParams.brandName,
+          queryType: '0'
         }
-        // 处理商品价格查询条件
-        if(searchParams.priceRange.min || searchParams.priceRange.max){
-          let brandSearchItem: SearchItem = {
-            field: 'price',
-            gte: searchParams.priceRange.min || '',
-            lte: searchParams.priceRange.max || '',
-            queryType: '1'
-          }
-          queryVos.push(brandSearchItem)
+        highlightField.push('brandName')
+        queryVos.push(brandSearchItem)
+      }
+      // 处理商品价格查询条件
+      if(searchParams.priceRange.min || searchParams.priceRange.max){
+        let brandSearchItem: SearchItem = {
+          field: 'price',
+          gte: searchParams.priceRange.min || '',
+          lte: searchParams.priceRange.max || '',
+          queryType: '1'
         }
-				let params: SearchParams = {
-					highlight: true,
-					highlightField: highlightField,
-					indexName: 'sku',
-					queryVos: queryVos,
-					page: 1,
-					rows: 100,
-					sortIndex: searchParams.sort,
-					sortOrder: searchParams.priceSort || searchParams.saleSort || 'Desc'
-				}
-				let res: any = await searchProduct(params)
-        toggle(false)
-				if (res.data) {
-					products.value = res.data.list as Sku[]
-				} else {
-					products.value = []
-				}
-			} else {
-				Toast.fail('请输入搜索关键词')
-			}
+        queryVos.push(brandSearchItem)
+      }
+      let params: SearchParams = {
+        highlight: true,
+        highlightField: highlightField,
+        indexName: 'sku',
+        queryVos: queryVos,
+        page: 1,
+        rows: 100,
+        sortIndex: searchParams.sort,
+        sortOrder: searchParams.priceSort || searchParams.saleSort || 'Desc'
+      }
+      let res: any = await searchProduct(params)
+      toggle(false)
+      if (res.data) {
+        products.value = res.data.list as Sku[]
+      } else {
+        products.value = []
+      }
 		}
 
 		const onCancel = () => {

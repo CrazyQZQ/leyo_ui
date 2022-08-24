@@ -35,8 +35,8 @@ export default defineComponent({
   name: 'PayType',
   setup(_, context) {
     let currentPayType: Ref<SysAccount> = ref({
-      accountId: null,
-      userId: null,
+      accountId: 0,
+      userId: 0,
       accountCode: '',
       accountName: '',
       amount: 0
@@ -62,15 +62,15 @@ export default defineComponent({
       currentPayType.value = data
       payTypes.value.push(data)
       payTypes.value.push({
-        accountId: null,
-        userId: null,
+        accountId: 0,
+        userId: 0,
         accountCode: '',
         accountName: '微信',
         amount: 0
       })
       payTypes.value.push({
-        accountId: null,
-        userId: null,
+        accountId: 0,
+        userId: 0,
         accountCode: '',
         accountName: '支付宝',
         amount: 0

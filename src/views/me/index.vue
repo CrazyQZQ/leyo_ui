@@ -70,7 +70,7 @@ import { IGlobalState } from '@src/store'
 import { getStatusCount, hotSales } from '@src/api/order'
 import { getAccountByUserId } from '@src/api/user'
 import { BaseResponseType } from "@src/models/common";
-import { SysAccount } from "@src/models/usr";
+import { SysAccount } from "@src/models/user";
 import { Sku } from '@src/models/product'
 import ProductList from '@src/components/ProductList.vue'
 import { toggle } from '@src/util/useToggle'
@@ -87,8 +87,8 @@ export default defineComponent({
     const showAmount = ref(false)
     let products: Ref<Sku[]> = ref([])
     let account: Ref<SysAccount> = ref({
-      accountId: null,
-      userId: null,
+      accountId: 0,
+      userId: 0,
       accountCode: '',
       accountName: '',
       amount: 0

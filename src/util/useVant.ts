@@ -45,6 +45,7 @@ import {
 	Popover,
 	Field,
 	Sticky,
+	Divider,
 	// Toast
 } from 'vant'
 
@@ -94,5 +95,6 @@ export function useVant(app: App<Element>) {
 	app.use(Popover)
 	app.use(Field)
 	app.use(Sticky)
+	app.use(Divider)
 	return app
 }

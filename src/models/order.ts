@@ -3,7 +3,8 @@ import { UserAddress } from "./user";
 
 // 订单
 export interface Order {
-    id?: number;
+    id: number;
+    orderStatus: number;
     number?: string;
     userId?: number;
     totalAmount: number;

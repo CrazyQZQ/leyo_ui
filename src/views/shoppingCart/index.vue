@@ -88,7 +88,7 @@ export default {
       let totalCount = 0
       let cartIds: number[] = []
       cartItems.value.forEach(item => {
-        if (item && item.sku && item.checked) {
+        if (item && item.sku && item.checked && item.id) {
           totalCount += item.num || 0
           cartIds.push(item.id)
           orderDetailList.push({

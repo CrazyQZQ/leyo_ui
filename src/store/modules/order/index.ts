@@ -5,8 +5,28 @@ import * as Types from '@src/store/modules/order/types'
 
 const state: IOrderState = {
     order: {
-        totalAmount: 0,
-        orderDetailList: []
+        id: 0,
+			orderStatus: -1,
+			number: '',
+			userId: 0,
+			totalAmount: 0,
+			totalCount: 0,
+			status: 0,
+			createTime: '',
+			address: {
+				userId: 0,
+				receiverName: '',
+				receiverTel: '',
+				defaultStatus: 0,
+				postCode: '',
+				province: '',
+				city: '',
+				region: '',
+				areaCode: '',
+				detailAddress: '',
+				fullAddress: ''
+			},
+			orderDetailList: []
     },
     orderDetailList: [],
     cartIds: [],
