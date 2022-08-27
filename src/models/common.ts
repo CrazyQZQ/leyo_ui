@@ -1,3 +1,4 @@
+import { NotifyType } from 'vant'
 /**
  * 公用返回类型
  */
@@ -28,6 +29,16 @@ export interface SearchItem {
     queryType: string;
     gte?: string;
     lte?: string;
+}
+
+/**
+ * 搜索条件单元
+ */
+ export interface WsMessage {
+    userId: number;
+    action: string;
+    body: string;
+    type: NotifyType;
 }
 
 

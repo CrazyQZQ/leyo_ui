@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, Ref } from 'vue'
+import { defineComponent, onMounted, Ref, inject } from 'vue'
 import { ref } from 'vue'
 import { useDark } from '@vueuse/core'
 import Head from '@components/Head.vue'
@@ -49,6 +49,7 @@ export default defineComponent({
 		Brand,
 		ProductList
 	},
+
 	setup() {
 		const isDark = useDark()
 		let products: Ref<Sku[]> = ref([])
@@ -102,7 +103,6 @@ export default defineComponent({
 			console.log('去搜索页')
 			// $router.push('/goodsList?shouHistory=1')
 		}
-
 		return {
 			isDark,
 			cateGoryList,
@@ -111,7 +111,7 @@ export default defineComponent({
 			products,
 			announcement,
 			keyWordChange,
-			toSearch
+			toSearch,
 		}
 	}
 })
