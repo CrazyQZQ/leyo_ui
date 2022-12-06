@@ -35,10 +35,16 @@ export interface SearchItem {
  * 搜索条件单元
  */
  export interface WsMessage {
+    id?: number;
     userId: number;
     action: string;
     body: string;
-    type: NotifyType;
+    type: string;
+    notificationType: NotifyType;
+    redirectUrl: string;
+    pushStatus: string;
+    readStatus: string;
+    createTime?: string;
 }
 
 
