@@ -2,6 +2,7 @@
   <div className="h-screen bg-gray-100 relative">
     <van-nav-bar title="设置" left-arrow @click-left="$router.go(-1)"/>
     <section class="my-1 h-5/6">
+      <van-cell is-link @click="goTo('/userInfoSetting', {})">个人资料</van-cell>
       <van-cell is-link @click="goTo('/address', {})">地址管理</van-cell>
     </section>
     <!--    <van-popup v-model:show="show" position="top" :style="{ height: '30%' }" />-->

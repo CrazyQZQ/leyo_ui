@@ -5,8 +5,9 @@ import './index.css'
 import { useVant } from './util'
 import store from './store'
 import socket from './util/socket'
+import VConsole from "vconsole";
 // import VueNativeSock from "vue-native-websocket-vue3";
-
+const vConsole = new VConsole();
 const app = useVant(createApp(App))
 app.provide('socket', socket)
 app.use(store)

@@ -18,7 +18,7 @@
 					<Swiper :list="banners"></Swiper>
 				</div>
 				<van-grid :column-num="3" gutter="30" :border="false" class="mt-4">
-					<van-grid-item v-for="(item, index) in subCategories" :key="index">
+					<van-grid-item v-for="(item, index) in subCategories" :key="index" @click="$router.push('/goodsList?typeName='+item.name)">
 						<van-image radius="5" width="3rem" height="3rem" :src="item.imageUrls?item.imageUrls[0]:''" />
 						<span class="text-gray-500 text-sm py-3">{{ item.name }}</span>
 					</van-grid-item>
@@ -48,7 +48,6 @@ export default defineComponent({
 			await typeList({ parentId: 0 }).then((res) => {
 				const { data } = res as BaseResponseType<ProductType>
 				categories.value = data.rows || []
-				console.log(categories.value)
 				if (categories.value.length > 0) {
 					typeList({ parentId: categories.value[0].id }).then((res1) => {
 						const { data } = res1 as BaseResponseType<ProductType>
@@ -80,7 +79,9 @@ export default defineComponent({
 		const onClickLeft = () => {}
 		const onClickRight = () => {}
 		const onChangeCategory = async (index: number) => {
+      toggle(true)
 			let res = await typeList({ parentId: categories.value[index]['id'] })
+      toggle(true)
 			const { data } = res as BaseResponseType<ProductType>
 			subCategories.value = data.rows || []
 		}

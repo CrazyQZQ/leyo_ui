@@ -46,6 +46,13 @@ const routes: Array<RouteRecordRaw> = [
 		}
 	},
 	{
+		path: '/userInfoSetting',
+		name: 'UserInfoSetting',
+		components: {
+			default: () => import('../views/setting/userInfoSetting.vue')
+		}
+	},
+	{
 		path: '/order',
 		name: 'Order',
 		meta: { requiresAuth: true },

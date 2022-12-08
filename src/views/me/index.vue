@@ -5,7 +5,7 @@
     <div class="relative w-full h-50 p-4">
       <div class="grid grid-rows-3 grid-cols-4 grid-flow-col gap-2">
         <div class="row-span-3 w-24">
-          <van-image round width="5rem" height="5rem" :src="userInfo.avatar" />
+          <van-image round width="5rem" height="5rem" :src="userInfo.avatar" @click="viewAvatar = true"/>
         </div>
         <div class="col-span-3 font-bold">{{ userInfo.nickName }}</div>
         <div class="col-span-3 text-gray-400">登录名：{{ userInfo.userName }}</div>
@@ -15,6 +15,7 @@
       <div class="absolute top-3.5 right-3.5">
         <van-icon name="setting-o" size="1.5rem" @click="$router.push('/setting')"/>
       </div>
+      <van-image-preview v-model:show="viewAvatar" :images="[userInfo.avatar]" />
     </div>
     <section class="w-full justify-center px-4">
 <!--      收藏-->
@@ -85,6 +86,7 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore<IGlobalState>()
     const showAmount = ref(false)
+    const viewAvatar = ref(false)
     let products: Ref<Sku[]> = ref([])
     let account: Ref<SysAccount> = ref({
       accountId: 0,
@@ -169,6 +171,7 @@ export default defineComponent({
       products,
       account,
       showAmount,
+      viewAvatar,
     }
   }
 })

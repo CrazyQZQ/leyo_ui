@@ -1,5 +1,5 @@
 <template :class="isDark ? 'dark' : ''">
-	<div style="overflow-y: hidden;overflow-x: hidden;" class="h-full">
+	<div style="overflow-y: hidden; overflow-x: hidden" class="h-full">
 		<!-- vue3.0不能采用种形式来实现，否则要报错，路由跳转动画也无法实现 -->
 		<!-- <transition name="slide-left">
       <router-view></router-view>
@@ -20,35 +20,45 @@ import { useDark } from '@vueuse/core'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { Notify, NotifyType } from 'vant'
 import { WsMessage } from '@src/models/common'
+import { useStore } from 'vuex'
+import { IGlobalState } from '@src/store'
 
 export default defineComponent({
 	name: 'App',
 	setup() {
+		const store = useStore<IGlobalState>()
 		const pingMsg: WsMessage = {
 			userId: 2,
 			action: 'ping',
 			body: '心跳消息',
-      type: 'primary'
+			type: '0',
+			notificationType: 'primary',
+			redirectUrl: '',
+			pushStatus: '0',
+			readStatus: '0'
 		}
 		onMounted(() => {
+			const userId = store.state.auth.userInfo.userId
 			const socket: any = inject('socket')
 			let ws = socket(2) as WebSocket
 			ws.onmessage = (res: any) => {
 				const { data } = res
 				const responseMsg = JSON.parse(data) as WsMessage
-				console.log("收到来自服务端的消息：", responseMsg)
-        
+				console.log('收到来自服务端的消息：', responseMsg)
+
 				if (responseMsg.action !== 'pong') {
 					Notify({
 						message: responseMsg.body,
-						type: responseMsg.type
+						type: responseMsg.notificationType
 					})
 				}
 			}
 			ws.onopen = function () {
 				console.log('WebSocket:已连接')
 				//心跳检测重置
-				heartCheck.reset().start()
+				if (userId) {
+					heartCheck.reset().start()
+				}
 			}
 			//连接发生错误的回调方法
 			ws.onerror = function () {

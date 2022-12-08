@@ -203,6 +203,15 @@ export default {
       types.value = typeRes.data.rows as ProductType[]
       let brandRes: any = await brandList({})
       brands.value = brandRes.data.rows as Brand[]
+
+      const typeName = route.query.typeName
+      const brandName = route.query.brandName
+      if(typeName || brandName){
+        showHistory.value = '0'
+        searchParams.typeName = typeName
+        searchParams.brandName = brandName
+        await onSearch("")
+      }
     })
 
 		const onSearch = async (value: string) => {
