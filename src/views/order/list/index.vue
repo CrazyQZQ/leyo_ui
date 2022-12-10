@@ -46,6 +46,9 @@
 									<span class="float-right mt-1">{{formatOrderStatus(item.orderStatus)}}</span>
 								</van-col>
 							</van-row>
+              <van-row class="w-full">
+                <span class="px-3" style="color: #ff770f">{{item.number}}</span>
+              </van-row>
 						</van-row>
 						<van-card
 							v-for="(one,idx) in item.orderDetailList"
@@ -63,7 +66,16 @@
 							</template>
 						</van-card>
 						<van-row class="w-full text-sm pt-1">
-							<van-col :span="24">
+              <van-col :span="24" v-if="item.orderStatus == 0">
+                <van-button round color="#ff770f" size="small" class="float-right" @click="updateOrder(item.id, 1)">去支付</van-button>
+              </van-col>
+              <van-col :span="24" v-else-if="item.orderStatus == 2">
+                <van-button round color="#ff770f" size="small" class="float-right" @click="updateOrder(item.id, 3)">签收</van-button>
+              </van-col>
+              <van-col :span="24" v-else-if="item.orderStatus == 3">
+                <van-button round color="#ff770f" size="small" class="float-right" @click="updateOrder(item.id, 4)">去评价</van-button>
+              </van-col>
+							<van-col :span="24" v-else-if="item.orderStatus != 1">
 								<van-button round color="#ff770f" size="small" class="float-right">再次购买</van-button>
 								<van-button round type="default" size="small" class="float-right right-3">查看评价</van-button>
 							</van-col>
@@ -78,13 +90,14 @@
 <script lang="ts">
 import logoUrl from '@assets/logo.png'
 import { reactive, toRefs, onMounted, computed } from 'vue'
-import { getOrderList } from '@src/api/order'
+import { getOrderList,updateOrderStatus } from '@src/api/order'
 import { Order, OrderDetail } from '@src/models/order'
 import { useRouter, useRoute } from 'vue-router'
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
 import { defaultErrorImage } from '@src/common/common'
 import { BaseResponseType } from '@src/models/common'
+import { toggle } from '@src/util/useToggle'
 
 export default {
 	name: 'Order',
@@ -134,7 +147,17 @@ export default {
 			})
 		}
 
-		const onChangeTab = (name: string) => {
+		const updateOrder = async (id: number, orderStatus: number) => {
+      toggle(true)
+      await updateOrderStatus({
+        orderId: id,
+        orderStatus: orderStatus
+      })
+      loadData()
+      toggle(false)
+    }
+
+    const onChangeTab = (name: string) => {
 			state.orderStatus = name
 			onRefresh()
 		}
@@ -180,7 +203,7 @@ export default {
 					? '待评价'
 					: orderStatus === 4
 					? '退款/售后'
-					: '已取消'
+					: '已完成'
 			}
 		})
 
@@ -193,7 +216,8 @@ export default {
 			onRefresh,
 			defaultErrorImage,
 			logoUrl,
-			formatOrderStatus
+			formatOrderStatus,
+      updateOrder
 		}
 	}
 }

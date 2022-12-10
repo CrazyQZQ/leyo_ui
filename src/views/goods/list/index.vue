@@ -88,7 +88,7 @@
       </section>
 		</transition>
 <!--    筛选-->
-    <van-popup class="relative" v-model:show="showExtCondition" position="right" :style="{ width: '70%', height: '100%' }">
+    <van-popup v-model:show="showExtCondition" position="right" :style="{ width: '70%', height: '100%' }">
       <template #default>
         <van-cell-group inset size="small">
           <van-cell title="分类">
@@ -199,13 +199,16 @@ export default {
 		})
 
     onMounted(async () => {
+      toggle(true)
       let typeRes: any = await typeList({})
       types.value = typeRes.data.rows as ProductType[]
       let brandRes: any = await brandList({})
       brands.value = brandRes.data.rows as Brand[]
 
-      const typeName = route.query.typeName
-      const brandName = route.query.brandName
+      const typeName = route.query.typeName as string
+      const brandName = route.query.brandName as string
+      console.log('typeName', typeName)
+      console.log('brandName', brandName)
       if(typeName || brandName){
         showHistory.value = '0'
         searchParams.typeName = typeName

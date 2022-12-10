@@ -19,16 +19,18 @@ import { defineComponent, ref, onMounted, inject } from 'vue'
 import { useDark } from '@vueuse/core'
 import { onBeforeRouteUpdate } from 'vue-router'
 import { Notify, NotifyType } from 'vant'
-import { WsMessage } from '@src/models/common'
+import { WsMessage,MessageInfo } from '@src/models/common'
 import { useStore } from 'vuex'
 import { IGlobalState } from '@src/store'
+import * as Types from '@src/store/modules/message/types'
 
 export default defineComponent({
 	name: 'App',
 	setup() {
 		const store = useStore<IGlobalState>()
+    const userId = store.state.auth.userInfo.userId
 		const pingMsg: WsMessage = {
-			userId: 2,
+			userId: userId,
 			action: 'ping',
 			body: '心跳消息',
 			type: '0',
@@ -38,19 +40,23 @@ export default defineComponent({
 			readStatus: '0'
 		}
 		onMounted(() => {
-			const userId = store.state.auth.userInfo.userId
 			const socket: any = inject('socket')
-			let ws = socket(2) as WebSocket
+			let ws = socket(userId) as WebSocket
 			ws.onmessage = (res: any) => {
 				const { data } = res
 				const responseMsg = JSON.parse(data) as WsMessage
 				console.log('收到来自服务端的消息：', responseMsg)
-
 				if (responseMsg.action !== 'pong') {
 					Notify({
 						message: responseMsg.body,
 						type: responseMsg.notificationType
 					})
+          const messageInfo: MessageInfo = {
+            type: responseMsg.type,
+            message: responseMsg,
+            count: 1
+          }
+          store.dispatch(`messageInfo/${Types.RECEIVE_MESSAGE}`, messageInfo)
 				}
 			}
 			ws.onopen = function () {
@@ -63,7 +69,7 @@ export default defineComponent({
 			//连接发生错误的回调方法
 			ws.onerror = function () {
 				console.log('WebSocket:发生错误')
-				ws = socket(2)
+				ws = socket(userId)
 			}
 			var heartCheck = {
 				timeout: 5000,
@@ -82,18 +88,16 @@ export default defineComponent({
 						//这里发送一个心跳，后端收到后，返回一个心跳消息，
 						//onmessage拿到返回的心跳就说明连接正常
 						if (ws) {
-							console.log('ws.readyState, ws.CLOSED', ws.readyState, ws.CLOSED)
+							console.log('ws.readyState', ws.readyState)
+              if(ws.readyState === 3){
+                console.log('WebSocket:已断开，正在重连')
+                ws = socket(userId)
+              }
 							ws.send(JSON.stringify(pingMsg))
-							console.log('websocket发送心跳信息')
-							// 如果超过一定时间还没重置，说明后端主动断开了
-							// self.serverTimeoutObj = setTimeout(function () {
-							// 	console.log('关闭服务')
-							// 	//如果onclose会执行reconnect，我们执行 websocket.close()就行了.如果直接执行 reconnect 会触发onclose导致重连两次
-							// 	if (ws) {
-							// 		ws.close()
-							// 	}
-							// }, self.timeout)
-						}
+						}else {
+              console.log('WebSocket:已断开，正在重连')
+              ws = socket(userId)
+            }
 					}, this.timeout)
 				}
 			}

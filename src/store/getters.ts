@@ -5,6 +5,7 @@ const getters = {
     isAuth: (state: IGlobalState) => state.auth.isAuth,
     order: (state: IGlobalState) => state.order,
     cacheInfo: (state: IGlobalState) => state.cacheInfo,
-    websocket: (state: IGlobalState) => state.websocket
+    websocket: (state: IGlobalState) => state.websocket,
+    messageInfo: (state: IGlobalState) => state.messageInfo,
 }
 export default getters

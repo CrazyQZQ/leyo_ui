@@ -2,7 +2,7 @@ import configrequest from './interface'
 
 const Request = new configrequest({
   baseURL: '/api',
-  timeout: 10000,
+  timeout: 20000,
   interceptors: {
     requestInterceptor: (config) => {
       return config

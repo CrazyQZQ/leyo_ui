@@ -37,7 +37,7 @@ export default defineComponent({
   setup() {
     const store = useStore<IGlobalState>()
     const router = useRouter()
-    const show = ref(false);
+    const viewAvatar = ref(false);
     const userInfo = computed(() => {
       return store.state.auth.userInfo
     })
@@ -46,7 +46,7 @@ export default defineComponent({
       router.push({path: r, query: query || {}})
     }
     return {
-      show,
+      viewAvatar,
       goTo,
       userInfo
     }

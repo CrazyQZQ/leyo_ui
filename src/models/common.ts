@@ -47,6 +47,16 @@ export interface SearchItem {
     createTime?: string;
 }
 
+/**
+ * 最新消息及未读消息数量
+ */
+export interface MessageInfo {
+    type: string;
+    message: WsMessage;
+    count: number;
+}
+
+
 
 
 

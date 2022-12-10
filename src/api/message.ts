@@ -28,7 +28,7 @@ export const readMessage = (params: object) => {
  * 删除消息
  * @param params
  */
-export const searchProduct = (params: Array) => {
+export const deleteMessage = (params: Array<number>) => {
     return request.post({
         url: '/system/message/deleteMessage',
         data: params,

@@ -24,6 +24,17 @@ export const saveOrder = (params: object) => {
 }
 
 /**
+ * 修改订单状态
+ * @param params
+ */
+export const updateOrderStatus = (params: object) => {
+    return request.get({
+        url:'/order/updateOrderStatus',
+        params: params
+    });
+}
+
+/**
  * 订单详情
  * @returns
  */
